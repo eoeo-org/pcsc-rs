@@ -1,7 +1,16 @@
+use dotenvy::dotenv;
+use std::env;
 use sysinfo::{CpuExt, System, SystemExt};
 
 fn main() {
+    dotenv().expect(".env file not found");
+
     println!("Hello, world!");
+
+    for (key, value) in env::vars() {
+        println!("{key}: {value}");
+    }
+
     let mut sys = System::new_all();
 
     // Update all information
