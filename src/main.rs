@@ -30,10 +30,11 @@ fn main() {
     println!("used swap   : {} bytes", sys.used_swap());
 
     // System information:
-    println!("System name:             {:?}", sys.name());
-    println!("System kernel version:   {:?}", sys.kernel_version());
-    println!("System OS version:       {:?}", sys.os_version());
-    println!("System host name:        {:?}", sys.host_name());
+    let os_name = sys.name().expect("Failed to get os name");
+    let os_version = sys.os_version().expect("Failed to get os version");
+    
+    println!("System OS: {} {}", os_name, os_version);
+    println!("System host name: {}", sys.host_name().expect("Failed to get hostname"));
 
     // Number of CPUs:
     println!("NB CPUs: {}", sys.cpus().len());
