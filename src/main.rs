@@ -19,7 +19,7 @@ fn main() {
 
     let PCSC_URI = match env::var("PCSC_URI") {
         Ok(val) => val,
-        Err(_) => "https://pc-stats.eov2.com".to_string(),
+        Err(_) => "https://pcss.eov2.com".to_string(),
     };
 
     println!("Hello, world! {}", PCSC_URI);
