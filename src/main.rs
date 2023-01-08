@@ -22,7 +22,7 @@ fn main() {
         Err(_) => "https://pc-stats.eov2.com".to_string(),
     };
 
-    println!("Hello, world!");
+    println!("Hello, world! {}", PCSC_URI);
 
     let mut sys = System::new_all();
 
