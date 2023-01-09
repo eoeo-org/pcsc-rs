@@ -3,9 +3,7 @@ mod status;
 use dotenvy::dotenv;
 use rust_socketio::{ClientBuilder, Payload, RawClient};
 use serde_json::json;
-use std::process;
-use std::time::Duration;
-use std::{any::Any, env};
+use std::{env, time::Duration, process};
 use sysinfo::{CpuExt, System, SystemExt};
 
 use crate::status::{CpuCoreUsage, CpuData, StatusData, StatusDataWithPass};
