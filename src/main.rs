@@ -3,106 +3,121 @@ mod status;
 use dotenvy::dotenv;
 use rust_socketio::{ClientBuilder, Payload, RawClient};
 use serde_json::json;
-use std::env;
-use std::time::Duration;
+use std::{env, process, time::Duration};
 use sysinfo::{CpuExt, System, SystemExt};
 
-use crate::status::{CpuData, CpuCoreUsage, StatusData};
+use crate::status::{CpuData, StatusData, StatusDataWithPass};
 
 fn main() {
     dotenv().expect(".env file not found");
 
-    /*for (key, value) in env::vars() {
-        println!("{key}: {value}");
-    }*/
+    let _pass = match env::var("PASS") {
+        Ok(val) => val,
+        Err(_) => "".to_string(),
+    };
 
-    println!("Hello, world!");
+    let pcsc_uri = match env::var("PCSC_URI") {
+        Ok(val) => val,
+        Err(_) => "https://pcss.eov2.com".to_string(),
+    };
+
+    if System::IS_SUPPORTED {
+        println!("This OS is supported!");
+        println!("Hello, world! {}", pcsc_uri);
+    } else {
+        println!("This OS isn't supported (yet?).");
+        process::exit(0x0004);
+    }
 
     let mut sys = System::new_all();
     sys.refresh_all();
 
+    /* loop {
+        sys.refresh_all();
+    } */
+
     let cpu_name = sys.cpus()[0].brand().to_string();
     let os_name = sys.name().expect("Failed to get os name");
-    let os_version = sys.os_version().expect("Failed to get os version");
+    let os_version = sys
+        .os_version()
+        .or(sys.kernel_version())
+        .expect("Failed to get os version");
     let hostname = sys.host_name().expect("Failed to get hostname");
 
-    println!("System OS: {} {}", os_name, os_version);
-
-    let mut system_info = StatusData {
-        _os: format!("{} {}", os_name, os_version),
-        hostname: hostname,
-        version: "".to_string(),
+    let data = StatusDataWithPass {
+        pass: _pass.clone(),
+        _os: format!("{} {}", os_name.clone(), os_version.clone()),
+        hostname: hostname.clone(),
+        version: "rust".to_string(),
         cpu: CpuData {
-            model: "".to_string(),
+            model: cpu_name.clone(),
             cpus: vec![],
             percent: 0,
         },
+        loadavg: None,
     };
 
-    println!("{}", json!(system_info));
+    let send_system_info = move |payload: Payload, socket: RawClient| {
+        match payload {
+            Payload::String(str) => println!("Received: {}", str),
+            Payload::Binary(bin_data) => println!("Received bytes: {:#?}", bin_data),
+        };
 
-    let send_system_info = |payload: Payload, socket: RawClient| match payload {
-        Payload::String(str) => {
-            println!("Received: {}", str);
-            //socket.emit("test", json!(system_info)).expect("Failed to emit.");
+        print!("hi from server");
+
+        socket
+            .emit("hi", json!(&data.clone()))
+            .expect("Failed to emit.");
+
+        let cpu_name = sys.cpus()[0].brand().to_string();
+        let os_name = sys.name().expect("Failed to get os name");
+        let os_version = sys.os_version().expect("Failed to get os version");
+        let hostname = sys.host_name().expect("Failed to get hostname");
+
+        let load_avg = sys.load_average();
+        let loadavg: Option<[f64; 3]> = match os_name.as_str() {
+            "Windows" => None,
+            _ => Some([load_avg.one, load_avg.five, load_avg.fifteen]),
+        };
+
+        println!("System OS: {} {}", os_name, os_version);
+
+        let system_info = StatusData {
+            _os: format!("{} {}", os_name.clone(), os_version.clone()),
+            hostname: hostname.clone(),
+            version: "rust".to_string(),
+            cpu: CpuData {
+                model: cpu_name.clone(),
+                cpus: vec![],
+                percent: 0,
+            },
+            loadavg: loadavg.clone(),
+        };
+
+        println!("=> disks:");
+        for disk in sys.disks() {
+            println!("{:?}", disk);
         }
-        _ => {}
+
+        println!("=> system:");
+        println!("total memory: {} bytes", sys.total_memory());
+        println!("used memory : {} bytes", sys.used_memory());
+
+        println!("{}", json!(system_info));
+
+        /* for cpu in sys.cpus() {
+            println!("{}%", cpu.cpu_usage());
+        } */
+        std::thread::sleep(Duration::from_secs(1));
     };
 
-    let socket = ClientBuilder::new("http://localhost:4200")
-        .namespace("/")
+    let _socket = ClientBuilder::new(pcsc_uri)
+        .namespace("/server")
         .on("connect", |_, _| println!("Connected"))
         .on("disconnect", |_, _| println!("Disconnected"))
         .on("hi", send_system_info)
-        .on("sync", send_system_info)
+        //.on("sync", send_system_info)
         .on("error", |err, _| eprintln!("Error: {:#?}", err))
         .connect()
         .expect("Connection failed");
-
-    let json_payload = json!({"token": 123});
-    socket
-        .emit("foo", json_payload)
-        .expect("Server unreachable");
-
-    // Update all information
-
-    let load_avg = sys.load_average();
-    println!(
-        "one minute: {}, five minutes: {}, fifteen minutes: {}",
-        load_avg.one, load_avg.five, load_avg.fifteen,
-    );
-
-    // Disks
-    println!("=> disks:");
-    for disk in sys.disks() {
-        println!("{:?}", disk);
-    }
-
-    println!("=> system:");
-    // RAM and swap:
-    println!("total memory: {} bytes", sys.total_memory());
-    println!("used memory : {} bytes", sys.used_memory());
-    println!("total swap  : {} bytes", sys.total_swap());
-    println!("used swap   : {} bytes", sys.used_swap());
-
-    // System information:
-    println!(
-        "System host name: {}",
-        sys.host_name().expect("Failed to get hostname")
-    );
-
-    // Number of CPUs:
-    println!("NB CPUs: {}", sys.cpus().len());
-
-    // CPU Usage
-    loop {
-        sys.refresh_cpu(); // Refreshing CPU information.
-        println!("---------------");
-        //println!("{}", sys.cpus());
-        for cpu in sys.cpus() {
-            println!("{}%", cpu.cpu_usage());
-        }
-        println!("---------------");
-        std::thread::sleep(Duration::from_secs(1));
-    }
 }
