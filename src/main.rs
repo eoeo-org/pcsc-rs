@@ -1,19 +1,38 @@
 mod status;
 
 use dotenvy::dotenv;
-use rust_socketio::{ClientBuilder, Payload, RawClient, TransportType};
+use rust_socketio::{ClientBuilder, Payload, RawClient};
 use serde_json::json;
-use std::{env, process, time::Duration};
+use std::{
+    env, process,
+    sync::{Arc, Mutex},
+};
 use sysinfo::{CpuExt, System, SystemExt};
 
 use crate::status::{CpuData, StatusDataWithPass};
+
+struct App {
+    pub finish: bool,
+}
+
+impl App {
+    pub fn new() -> Self {
+        App { finish: false }
+    }
+
+    fn on_message(&mut self, payload: Payload, _socket: RawClient) {
+        println!("message: {:#?}", payload);
+        //socket.emit("disconnect", "received message").expect("Server unreachable");
+        self.finish = true;
+    }
+}
 
 fn main() {
     dotenv().expect(".env file not found");
 
     let pcsc_uri = match env::var("PCSC_URI") {
         Ok(val) => val,
-        Err(_) => "https://pcss.eov2.com/".to_string(),
+        Err(_) => "https://pcss.eov2.com".to_string(),
     };
 
     if System::IS_SUPPORTED {
@@ -23,6 +42,9 @@ fn main() {
         println!("This OS isn't supported (yet?).");
         process::exit(0x0004);
     }
+
+    let app = Arc::new(Mutex::new(App::new()));
+    let event_app = app.clone();
 
     /*
             let cpu_name = sys.cpus()[0].brand().to_string();
@@ -66,28 +88,35 @@ fn main() {
             }
     */
 
-    let hi_event = |payload: Payload, socket: RawClient| {
-        match payload {
-            Payload::String(str) => println!("Received: {}", str),
-            Payload::Binary(bin_data) => println!("Received bytes: {:#?}", bin_data),
-        };
-
-        print!("hi from server");
-        init(socket);
-    };
-
     ClientBuilder::new(pcsc_uri)
         .namespace("/server")
         .on("open", |_, _| println!("Connected"))
         .on("close", |_, _| println!("Disconnected"))
-        .on("hi", hi_event)
+        .on("hi", |payload: Payload, socket: RawClient| {
+            match payload {
+                Payload::String(str) => println!("Received: {}", str),
+                Payload::Binary(bin_data) => println!("Received bytes: {:#?}", bin_data),
+            };
+            init(socket);
+        })
         //.on("sync", send_system_info)
-        .on("error", |err, _| eprintln!("Error: {:?}", err))
+        .on("message", move |msg, client| {
+            event_app.lock().unwrap().on_message(msg, client)
+        })
+        .on("error", |err, _| eprintln!("Error: {:#?}", err))
         .connect()
         .expect("Connection failed");
+
+    loop {
+        if app.lock().unwrap().finish {
+            break;
+        }
+    }
 }
 
 fn init(socket: RawClient) {
+    print!("hi from server");
+
     let mut sys = System::new_all();
     sys.refresh_all();
 
@@ -95,6 +124,8 @@ fn init(socket: RawClient) {
         Ok(val) => val,
         Err(_) => "".to_string(),
     };
+
+    println!("{}", _pass);
 
     let cpu_name = sys.cpus()[0].brand().to_string();
     let os_name = sys.name().expect("Failed to get os name");
