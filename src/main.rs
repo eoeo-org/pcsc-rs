@@ -3,37 +3,38 @@ mod status;
 use dotenvy::dotenv;
 use rust_socketio::{ClientBuilder, Payload, RawClient};
 use serde_json::json;
-use std::{env, time::Duration, process};
+use std::{env, process, time::Duration};
 use sysinfo::{CpuExt, System, SystemExt};
 
-use crate::status::{CpuCoreUsage, CpuData, StatusData, StatusDataWithPass};
+use crate::status::{CpuData, StatusData, StatusDataWithPass};
 
 fn main() {
     dotenv().expect(".env file not found");
 
-    let PASS = match env::var("PASS") {
+    let _pass = match env::var("PASS") {
         Ok(val) => val,
         Err(_) => "".to_string(),
     };
 
-    let PCSC_URI = match env::var("PCSC_URI") {
+    let pcsc_uri = match env::var("PCSC_URI") {
         Ok(val) => val,
         Err(_) => "https://pcss.eov2.com".to_string(),
     };
 
     if System::IS_SUPPORTED {
         println!("This OS is supported!");
-        println!("Hello, world! {}", PCSC_URI);
+        println!("Hello, world! {}", pcsc_uri);
     } else {
         println!("This OS isn't supported (yet?).");
         process::exit(0x0004);
     }
 
     let mut sys = System::new_all();
+    sys.refresh_all();
 
-    loop {
+    /* loop {
         sys.refresh_all();
-    }
+    } */
 
     let cpu_name = sys.cpus()[0].brand().to_string();
     let os_name = sys.name().expect("Failed to get os name");
@@ -44,7 +45,7 @@ fn main() {
     let hostname = sys.host_name().expect("Failed to get hostname");
 
     let data = StatusDataWithPass {
-        pass: PASS.clone(),
+        pass: _pass.clone(),
         _os: format!("{} {}", os_name.clone(), os_version.clone()),
         hostname: hostname.clone(),
         version: "rust".to_string(),
@@ -55,8 +56,6 @@ fn main() {
         },
         loadavg: None,
     };
-
-    println!("{}", json!(data));
 
     let send_system_info = move |payload: Payload, socket: RawClient| {
         match payload {
@@ -83,7 +82,7 @@ fn main() {
 
         println!("System OS: {} {}", os_name, os_version);
 
-        let mut system_info = StatusData {
+        let system_info = StatusData {
             _os: format!("{} {}", os_name.clone(), os_version.clone()),
             hostname: hostname.clone(),
             version: "rust".to_string(),
@@ -106,19 +105,19 @@ fn main() {
 
         println!("{}", json!(system_info));
 
-        for cpu in sys.cpus() {
-            //println!("{}%", cpu.cpu_usage());
-        }
+        /* for cpu in sys.cpus() {
+            println!("{}%", cpu.cpu_usage());
+        } */
         std::thread::sleep(Duration::from_secs(1));
     };
 
-    let socket = ClientBuilder::new(PCSC_URI)
+    let _socket = ClientBuilder::new(pcsc_uri)
         .namespace("/server")
         .on("connect", |_, _| println!("Connected"))
         .on("disconnect", |_, _| println!("Disconnected"))
         .on("hi", send_system_info)
         //.on("sync", send_system_info)
-        .on("error", |err, _| eprintln!("Error: {:#?}", err));
-
-    socket.connect().expect("Connection failed");
+        .on("error", |err, _| eprintln!("Error: {:#?}", err))
+        .connect()
+        .expect("Connection failed");
 }
