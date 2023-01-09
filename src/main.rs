@@ -4,6 +4,7 @@ use dotenvy::dotenv;
 use rust_socketio::{ClientBuilder, Payload, RawClient};
 use serde_json::json;
 use std::time::Duration;
+use std::process;
 use std::{any::Any, env};
 use sysinfo::{CpuExt, System, SystemExt};
 
@@ -22,14 +23,20 @@ fn main() {
         Err(_) => "https://pcss.eov2.com/".to_string(),
     };
 
-    println!("Hello, world! {}", PCSC_URI);
+    if System::IS_SUPPORTED {
+        println!("This OS is supported!");
+        println!("Hello, world! {}", PCSC_URI);
+    } else {
+        println!("This OS isn't supported (yet?).");
+        process::exit(0x0004);
+    }
 
     let mut sys = System::new_all();
     sys.refresh_all();
 
     let cpu_name = sys.cpus()[0].brand().to_string();
     let os_name = sys.name().expect("Failed to get os name");
-    let os_version = dbg!(sys.os_version()).expect("Failed to get os version");
+    let os_version = sys.os_version().expect("Failed to get os version");
     let hostname = sys.host_name().expect("Failed to get hostname");
 
     let data = StatusDataWithPass {
