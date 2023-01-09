@@ -3,8 +3,8 @@ mod status;
 use dotenvy::dotenv;
 use rust_socketio::{ClientBuilder, Payload, RawClient};
 use serde_json::json;
-use std::time::Duration;
 use std::process;
+use std::time::Duration;
 use std::{any::Any, env};
 use sysinfo::{CpuExt, System, SystemExt};
 
@@ -20,7 +20,7 @@ fn main() {
 
     let PCSC_URI = match env::var("PCSC_URI") {
         Ok(val) => val,
-        Err(_) => "https://pcss.eov2.com/".to_string(),
+        Err(_) => "https://pcss.eov2.com".to_string(),
     };
 
     if System::IS_SUPPORTED {
@@ -32,11 +32,17 @@ fn main() {
     }
 
     let mut sys = System::new_all();
-    sys.refresh_all();
+
+    loop {
+        sys.refresh_all();
+    }
 
     let cpu_name = sys.cpus()[0].brand().to_string();
     let os_name = sys.name().expect("Failed to get os name");
-    let os_version = sys.os_version().or(sys.kernel_version()).expect("Failed to get os version");
+    let os_version = sys
+        .os_version()
+        .or(sys.kernel_version())
+        .expect("Failed to get os version");
     let hostname = sys.host_name().expect("Failed to get hostname");
 
     let data = StatusDataWithPass {
@@ -66,50 +72,46 @@ fn main() {
             .emit("hi", json!(&data.clone()))
             .expect("Failed to emit.");
 
-        loop {
-            sys.refresh_all();
+        let cpu_name = sys.cpus()[0].brand().to_string();
+        let os_name = sys.name().expect("Failed to get os name");
+        let os_version = sys.os_version().expect("Failed to get os version");
+        let hostname = sys.host_name().expect("Failed to get hostname");
 
-            let cpu_name = sys.cpus()[0].brand().to_string();
-            let os_name = sys.name().expect("Failed to get os name");
-            let os_version = sys.os_version().expect("Failed to get os version");
-            let hostname = sys.host_name().expect("Failed to get hostname");
+        let load_avg = sys.load_average();
+        let loadavg: Option<[f64; 3]> = match os_name.as_str() {
+            "Windows" => None,
+            _ => Some([load_avg.one, load_avg.five, load_avg.fifteen]),
+        };
 
-            let load_avg = sys.load_average();
-            let loadavg: Option<[f64; 3]> = match os_name.as_str() {
-                "Windows" => None,
-                _ => Some([load_avg.one, load_avg.five, load_avg.fifteen]),
-            };
+        println!("System OS: {} {}", os_name, os_version);
 
-            println!("System OS: {} {}", os_name, os_version);
+        let mut system_info = StatusData {
+            _os: format!("{} {}", os_name.clone(), os_version.clone()),
+            hostname: hostname.clone(),
+            version: "rust".to_string(),
+            cpu: CpuData {
+                model: cpu_name.clone(),
+                cpus: vec![],
+                percent: 0,
+            },
+            loadavg: loadavg.clone(),
+        };
 
-            let mut system_info = StatusData {
-                _os: format!("{} {}", os_name.clone(), os_version.clone()),
-                hostname: hostname.clone(),
-                version: "rust".to_string(),
-                cpu: CpuData {
-                    model: cpu_name.clone(),
-                    cpus: vec![],
-                    percent: 0,
-                },
-                loadavg: loadavg.clone(),
-            };
-
-            println!("=> disks:");
-            for disk in sys.disks() {
-                println!("{:?}", disk);
-            }
-
-            println!("=> system:");
-            println!("total memory: {} bytes", sys.total_memory());
-            println!("used memory : {} bytes", sys.used_memory());
-
-            println!("{}", json!(system_info));
-
-            for cpu in sys.cpus() {
-                //println!("{}%", cpu.cpu_usage());
-            }
-            std::thread::sleep(Duration::from_secs(1));
+        println!("=> disks:");
+        for disk in sys.disks() {
+            println!("{:?}", disk);
         }
+
+        println!("=> system:");
+        println!("total memory: {} bytes", sys.total_memory());
+        println!("used memory : {} bytes", sys.used_memory());
+
+        println!("{}", json!(system_info));
+
+        for cpu in sys.cpus() {
+            //println!("{}%", cpu.cpu_usage());
+        }
+        std::thread::sleep(Duration::from_secs(1));
     };
 
     let socket = ClientBuilder::new(PCSC_URI)
