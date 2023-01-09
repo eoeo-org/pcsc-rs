@@ -36,7 +36,7 @@ fn main() {
 
     let cpu_name = sys.cpus()[0].brand().to_string();
     let os_name = sys.name().expect("Failed to get os name");
-    let os_version = sys.os_version().expect("Failed to get os version");
+    let os_version = sys.os_version().or(sys.kernel_version()).expect("Failed to get os version");
     let hostname = sys.host_name().expect("Failed to get hostname");
 
     let data = StatusDataWithPass {
@@ -51,6 +51,8 @@ fn main() {
         },
         loadavg: None,
     };
+
+    println!("{}", json!(data));
 
     let send_system_info = move |payload: Payload, socket: RawClient| {
         match payload {
