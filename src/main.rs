@@ -20,9 +20,9 @@ impl App {
         App { finish: false }
     }
 
-    fn on_message(&mut self, payload: Payload, socket: RawClient) {
+    fn on_message(&mut self, payload: Payload, _socket: RawClient) {
         println!("message: {:#?}", payload);
-        socket.emit("disconnect", "received message").expect("Server unreachable");
+        //socket.emit("disconnect", "received message").expect("Server unreachable");
         self.finish = true;
     }
 }
