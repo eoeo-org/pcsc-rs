@@ -20,9 +20,9 @@ impl App {
         App { finish: false }
     }
 
-    fn on_message(&mut self, payload: Payload, _socket: RawClient) {
+    fn on_message(&mut self, payload: Payload, socket: RawClient) {
         println!("message: {:#?}", payload);
-        //socket.emit("disconnect", "received message").expect("Server unreachable");
+        socket.emit("disconnect", "received message").expect("Server unreachable");
         self.finish = true;
     }
 }
@@ -46,48 +46,6 @@ fn main() {
     let app = Arc::new(Mutex::new(App::new()));
     let event_app = app.clone();
 
-    /*
-            let cpu_name = sys.cpus()[0].brand().to_string();
-            let os_name = sys.name().expect("Failed to get os name");
-            let os_version = sys.os_version().expect("Failed to get os version");
-            let hostname = sys.host_name().expect("Failed to get hostname");
-
-            let load_avg = sys.load_average();
-            let loadavg: Option<[f64; 3]> = match os_name.as_str() {
-                "Windows" => None,
-                _ => Some([load_avg.one, load_avg.five, load_avg.fifteen]),
-            };
-
-            println!("System OS: {} {}", os_name, os_version);
-
-            let system_info = StatusData {
-                _os: format!("{} {}", os_name.clone(), os_version.clone()),
-                hostname: hostname.clone(),
-                version: "rust".to_string(),
-                cpu: CpuData {
-                    model: cpu_name.clone(),
-                    cpus: vec![],
-                    percent: 0,
-                },
-                loadavg: loadavg.clone(),
-            };
-
-            println!("=> disks:");
-            for disk in sys.disks() {
-                println!("{:?}", disk);
-            }
-
-            println!("=> system:");
-            println!("total memory: {} bytes", sys.total_memory());
-            println!("used memory : {} bytes", sys.used_memory());
-
-            println!("{}", json!(system_info));
-
-            for cpu in sys.cpus() {
-                println!("{}%", cpu.cpu_usage());
-            }
-    */
-
     ClientBuilder::new(pcsc_uri)
         .namespace("/server")
         .on("open", |_, _| println!("Connected"))
@@ -103,7 +61,10 @@ fn main() {
         .on("message", move |msg, client| {
             event_app.lock().unwrap().on_message(msg, client)
         })
-        .on("error", |err, _| eprintln!("Error: {:#?}", err))
+        .on("error", |err, _| match err {
+            Payload::String(str) => eprintln!("Error: {}", str),
+            Payload::Binary(bin_data) => eprintln!("Error: {:#?}", bin_data),
+        })
         .connect()
         .expect("Connection failed");
 
