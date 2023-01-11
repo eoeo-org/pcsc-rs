@@ -643,7 +643,6 @@ name = "pcsc-rs"
 version = "0.1.0"
 dependencies = [
  "dotenvy",
- "rand",
  "rust_socketio",
  "serde",
  "serde_json",

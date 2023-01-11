@@ -5,8 +5,6 @@ use sysinfo::{CpuExt, System, SystemExt};
 
 use crate::status::{CpuData, StatusData, StatusDataWithPass};
 
-use rand;
-
 pub fn new() {
     let mut sys = System::new_all();
     let builder = thread::Builder::new();
