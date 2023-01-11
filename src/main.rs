@@ -31,7 +31,7 @@ impl App {
 
 fn main() {
     dotenv().expect(".env file not found");
-    threads::main();
+    threads::new();
 
     let pcsc_uri = match env::var("PCSC_URI") {
         Ok(val) => val,
