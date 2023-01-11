@@ -7,8 +7,9 @@ use crate::status::{CpuData, StatusData, StatusDataWithPass};
 
 pub fn main() {
     let mut sys = System::new_all();
+    let builder = thread::Builder::new();
 
-    thread::spawn(move || loop {
+    let handler = builder.name("SysInfoThread".to_string()).spawn(move || loop {
         sys.refresh_all();
 
         let cpu_name = sys.cpus()[0].brand().to_string();
@@ -55,5 +56,7 @@ pub fn main() {
         println!("{}", json!(system_info));
 
         thread::sleep(Duration::from_secs(1));
-    });
+    }).unwrap();
+    
+    handler.join().unwrap();
 }
