@@ -1,7 +1,9 @@
+mod client;
 mod status;
+mod threads;
 
 use dotenvy::dotenv;
-use rust_socketio::{ClientBuilder, Payload, RawClient};
+use rust_socketio::{ClientBuilder, Event, Payload, RawClient};
 use serde_json::json;
 use std::{
     env, process,
@@ -29,6 +31,7 @@ impl App {
 
 fn main() {
     dotenv().expect(".env file not found");
+    threads::main();
 
     let pcsc_uri = match env::var("PCSC_URI") {
         Ok(val) => val,
@@ -48,25 +51,31 @@ fn main() {
 
     ClientBuilder::new(pcsc_uri)
         .namespace("/server")
-        .on("open", |_, _| println!("Connected"))
-        .on("close", |_, _| println!("Disconnected"))
-        .on("hi", |payload: Payload, socket: RawClient| {
-            match payload {
-                Payload::String(str) => println!("Received: {}", str),
-                Payload::Binary(bin_data) => println!("Received bytes: {:#?}", bin_data),
-            };
-            init(socket);
-        })
-        .on("sync", |payload: Payload, socket: RawClient| {
-            match payload {
-                Payload::String(str) => println!("Received: {}", str),
-                Payload::Binary(bin_data) => println!("Received bytes: {:#?}", bin_data),
-            };
-        })
-        .on("message", move |msg, client| {
+        .on(Event::Connect, |_, _| println!("Connected"))
+        .on(Event::Close, |_, _| println!("Disconnected"))
+        .on(
+            Event::Custom("hi".to_string()),
+            |payload: Payload, socket: RawClient| {
+                match payload {
+                    Payload::String(str) => println!("Received: {}", str),
+                    Payload::Binary(bin_data) => println!("Received bytes: {:#?}", bin_data),
+                };
+                init(socket);
+            },
+        )
+        .on(
+            Event::Custom("sync".to_string()),
+            |payload: Payload, _socket: RawClient| {
+                match payload {
+                    Payload::String(str) => println!("Received: {}", str),
+                    Payload::Binary(bin_data) => println!("Received bytes: {:#?}", bin_data),
+                };
+            },
+        )
+        .on(Event::Message, move |msg, client| {
             event_app.lock().unwrap().on_message(msg, client)
         })
-        .on("error", |err, _| match err {
+        .on(Event::Error, |err, _| match err {
             Payload::String(str) => eprintln!("Error: {}", str),
             Payload::Binary(bin_data) => eprintln!("Error: {:#?}", bin_data),
         })
