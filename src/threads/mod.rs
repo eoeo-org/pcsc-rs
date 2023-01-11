@@ -62,15 +62,4 @@ pub fn new() {
             thread::sleep(Duration::from_secs(1));
         })
         .unwrap();
-
-    let builder2 = thread::Builder::new();
-    let handler2 = builder2
-    .name("TestThread".to_string())
-    .spawn(move || loop {
-        loop{
-            println!("char: {}", rand::random::<char>());
-
-            thread::sleep(Duration::from_millis(500));
-        }
-    }).unwrap();
 }
