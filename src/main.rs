@@ -57,7 +57,12 @@ fn main() {
             };
             init(socket);
         })
-        //.on("sync", send_system_info)
+        .on("sync", |payload: Payload, socket: RawClient| {
+            match payload {
+                Payload::String(str) => println!("Received: {}", str),
+                Payload::Binary(bin_data) => println!("Received bytes: {:#?}", bin_data),
+            };
+        })
         .on("message", move |msg, client| {
             event_app.lock().unwrap().on_message(msg, client)
         })
@@ -85,8 +90,6 @@ fn init(socket: RawClient) {
         Ok(val) => val,
         Err(_) => "".to_string(),
     };
-
-    println!("{}", _pass);
 
     let cpu_name = sys.cpus()[0].brand().to_string();
     let os_name = sys.name().expect("Failed to get os name");
