@@ -1,5 +1,4 @@
 use arc_swap::ArcSwap;
-use serde_json::json;
 use sysinfo::{System, SystemExt};
 
 use std::{sync::Arc, thread, time::Duration};
@@ -17,8 +16,6 @@ pub fn spawn_monitor(shared_data: Arc<ArcSwap<SystemStatus>>) {
 
             sys.refresh_all();
             let current_status = SystemStatus::get(&mut sys);
-            println!("{}", json!(current_status));
-
             shared_data.store(Arc::new(current_status));
         })
         .unwrap();

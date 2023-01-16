@@ -1,7 +1,8 @@
 use cfg_if::cfg_if;
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
-use sysinfo::{Cpu, CpuExt, System, SystemExt};
+use sysinfo::{Cpu, CpuExt, System, SystemExt, DiskExt};
+use std::env;
 
 use crate::unix_to_date;
 
@@ -34,6 +35,14 @@ pub struct RamData {
     pub(crate) usage: f32,
 }
 
+#[derive(Serialize, Deserialize, Clone, Debug)]
+pub struct StorageData {
+    pub(crate) free: u64,
+    pub(crate) total: u64,
+    #[serde(rename = "percent")]
+    pub(crate) usage: f32,
+}
+
 #[derive(Serialize, Deserialize, Clone)]
 pub struct SystemStatus {
     pub(crate) _os: String,
@@ -41,6 +50,7 @@ pub struct SystemStatus {
     pub(crate) version: String,
     pub(crate) cpu: CpuData,
     pub(crate) ram: RamData,
+    pub(crate) storage: StorageData,
     #[serde(rename = "loadavg")]
     pub(crate) load_average: Option<[f64; 3]>,
     pub(crate) uptime: String,
@@ -103,8 +113,10 @@ impl SystemStatus {
         let uptime = unix_to_date::new(sys.uptime());
 
         for disk in sys.disks() {
-            println!("{:?}", disk);
+            println!("{:?}", disk.mount_point());
         }
+
+        //let disk = sys.disks().iter().find(|disk| disk.mount_point());
 
         Self {
             _os: format!("{} {}", os_name.clone(), os_version.clone()),
@@ -114,6 +126,7 @@ impl SystemStatus {
             ram,
             load_average,
             uptime,
+            storage: StorageData { free: 0, total: 0, usage: 0. },
         }
     }
 
