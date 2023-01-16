@@ -1,17 +1,19 @@
-mod client;
 mod status;
+mod thread_message;
 mod threads;
+mod unix_to_date;
 
+use arc_swap::ArcSwap;
 use dotenvy::dotenv;
 use rust_socketio::{ClientBuilder, Event, Payload, RawClient};
 use serde_json::json;
 use std::{
-    env, process,
+    env, hint, process,
     sync::{Arc, Mutex},
 };
-use sysinfo::{CpuExt, System, SystemExt};
+use sysinfo::{System, SystemExt};
 
-use crate::status::{CpuData, StatusDataWithPass};
+use crate::status::SystemStatus;
 
 struct App {
     pub finish: bool,
@@ -29,22 +31,28 @@ impl App {
     }
 }
 
+mod mimi;
+
 fn main() {
-    dotenv().expect(".env file not found");
-    threads::new();
-
-    let pcsc_uri = match env::var("PCSC_URI") {
-        Ok(val) => val,
-        Err(_) => "https://pcss.eov2.com".to_string(),
-    };
-
-    if System::IS_SUPPORTED {
-        println!("This OS is supported!");
-        println!("Hello, world! {}", pcsc_uri);
-    } else {
+    if !System::IS_SUPPORTED {
         println!("This OS isn't supported (yet?).");
-        process::exit(0x0004);
+        process::exit(95);
     }
+
+    dotenv().expect(".env file not found");
+
+    // system tukuru
+    let mut system = System::new_all();
+
+    let shared_data =
+        Arc::new(ArcSwap::from_pointee(SystemStatus::get(&mut system)));
+
+    threads::spawn_monitor(Arc::clone(&shared_data));
+
+    let pcsc_uri = env::var("PCSC_URI").unwrap_or_else(|_| "https://pcss.eov2.com".into());
+
+    println!("This OS is supported!");
+    println!("Hello, world! {}", pcsc_uri);
 
     let app = Arc::new(Mutex::new(App::new()));
     let event_app = app.clone();
@@ -53,27 +61,26 @@ fn main() {
         .namespace("/server")
         .on(Event::Connect, |_, _| println!("Connected"))
         .on(Event::Close, |_, _| println!("Disconnected"))
-        .on(
-            Event::Custom("hi".to_string()),
-            |payload: Payload, socket: RawClient| {
-                match payload {
-                    Payload::String(str) => println!("Received: {}", str),
-                    Payload::Binary(bin_data) => println!("Received bytes: {:#?}", bin_data),
-                };
-                init(socket);
-            },
-        )
-        .on(
-            Event::Custom("sync".to_string()),
-            |payload: Payload, _socket: RawClient| {
-                match payload {
-                    Payload::String(str) => println!("Received: {}", str),
-                    Payload::Binary(bin_data) => println!("Received bytes: {:#?}", bin_data),
-                };
-            },
-        )
-        .on(Event::Message, move |msg, client| {
-            event_app.lock().unwrap().on_message(msg, client)
+        .on("hi", |payload, socket| {
+            match payload {
+                Payload::String(str) => println!("Received: {}", str),
+                Payload::Binary(bin_data) => println!("Received bytes: {:#?}", bin_data),
+            };
+            init(socket);
+        })
+        .on("sync", move |payload, socket| {
+            match payload {
+                Payload::String(str) => println!("Received: {}", str),
+                Payload::Binary(bin_data) => println!("Received bytes: {:#?}", bin_data),
+            };
+            
+            let status = shared_data.load();
+            if let Err(e) = socket.emit("sync", json!(status.as_ref())) {
+                dbg!(e);
+            }
+        })
+        .on(Event::Message, move |payload, client| {
+            event_app.lock().unwrap().on_message(payload, client)
         })
         .on(Event::Error, |err, _| match err {
             Payload::String(str) => eprintln!("Error: {}", str),
@@ -82,10 +89,8 @@ fn main() {
         .connect()
         .expect("Connection failed");
 
-    loop {
-        if app.lock().unwrap().finish {
-            break;
-        }
+    while !app.lock().unwrap().finish {
+        hint::spin_loop();
     }
 }
 
@@ -95,34 +100,10 @@ fn init(socket: RawClient) {
     let mut sys = System::new_all();
     sys.refresh_all();
 
-    let _pass = match env::var("PASS") {
-        Ok(val) => val,
-        Err(_) => "".to_string(),
-    };
+    let pass = env::var("PASS").unwrap_or_default();
 
-    let cpu_name = sys.cpus()[0].brand().to_string();
-    let os_name = sys.name().expect("Failed to get os name");
-    let os_version = sys
-        .os_version()
-        .or(sys.kernel_version())
-        .expect("Failed to get os version");
-    let hostname = sys.host_name().expect("Failed to get hostname");
-
+    let status = SystemStatus::get(&mut sys);
     socket
-        .emit(
-            "hi",
-            json!(StatusDataWithPass {
-                pass: _pass,
-                _os: format!("{} {}", os_name, os_version),
-                hostname: hostname,
-                version: "rust".to_string(),
-                cpu: CpuData {
-                    model: cpu_name,
-                    cpus: vec![],
-                    percent: 0,
-                },
-                loadavg: None,
-            }),
-        )
+        .emit("hi", json!(status.with_pass(pass)))
         .expect("Failed to emit.");
 }
