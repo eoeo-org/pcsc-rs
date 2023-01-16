@@ -69,7 +69,7 @@ impl SystemStatus {
                 let load_average = None;
             } else {
                 let load_average = sys.load_average();
-                let load_average = Some([loadavg.one, loadavg.five, loadavg.fifteen]);
+                let load_average = Some([load_average.one, load_average.five, load_average.fifteen]);
             }
         };
 
