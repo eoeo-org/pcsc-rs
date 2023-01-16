@@ -31,8 +31,6 @@ impl App {
     }
 }
 
-mod mimi;
-
 fn main() {
     if !System::IS_SUPPORTED {
         println!("This OS isn't supported (yet?).");
