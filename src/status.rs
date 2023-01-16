@@ -102,8 +102,9 @@ impl SystemStatus {
 
         let uptime = unix_to_date::new(sys.uptime());
 
-        
-        println!("{:#?}", ram);
+        for disk in sys.disks() {
+            println!("{:?}", disk);
+        }
 
         Self {
             _os: format!("{} {}", os_name.clone(), os_version.clone()),
