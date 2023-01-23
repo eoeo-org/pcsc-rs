@@ -133,7 +133,8 @@ impl SystemStatus {
                 free: disk.unwrap().available_space(),
                 total: disk.unwrap().total_space(),
                 usage: {
-                    let free = disk.unwrap().available_space() as f32 / disk.unwrap().total_space() as f32;
+                    let free =
+                        disk.unwrap().available_space() as f32 / disk.unwrap().total_space() as f32;
                     ((1.0 - free) * 100.0).ceil()
                 },
             },
