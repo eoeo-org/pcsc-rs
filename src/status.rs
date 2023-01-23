@@ -120,7 +120,6 @@ impl SystemStatus {
             println!("{:?}", disk.as_os_str());
         }
         let disk = sys.disks().iter().next();
-        println!("{}", disk.unwrap().available_space());
 
         Self {
             _os: format!("{} {}", os_name.clone(), os_version.clone()),
