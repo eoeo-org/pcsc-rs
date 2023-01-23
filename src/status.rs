@@ -117,7 +117,7 @@ impl SystemStatus {
 
         let dir = env::current_dir().unwrap();
         for disk in dir.components() {
-            println!("{:?}", disk.as_os_str());
+            //println!("{:?}", disk.as_os_str());
         }
         let disk = sys.disks().iter().next();
 
