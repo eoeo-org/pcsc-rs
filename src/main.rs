@@ -1,3 +1,5 @@
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+
 mod status;
 mod thread_message;
 mod threads;
@@ -9,7 +11,7 @@ use rust_socketio::{ClientBuilder, Event, Payload, RawClient};
 use serde_json::json;
 use std::{
     env, hint, process,
-    sync::{Arc, Mutex},
+    sync::{Arc, Mutex}, thread, time::Duration, path::Path
 };
 use sysinfo::{System, SystemExt};
 
@@ -89,6 +91,7 @@ fn main() {
 
     while !app.lock().unwrap().finish {
         hint::spin_loop();
+        thread::sleep(Duration::from_secs(1));
     }
 }
 

@@ -1,8 +1,7 @@
 use cfg_if::cfg_if;
 use serde::{Deserialize, Serialize};
-use serde_json::{Value, json};
-use sysinfo::{Cpu, CpuExt, System, SystemExt, DiskExt};
-use std::env;
+use sysinfo::{Cpu, CpuExt, System, SystemExt};
+use std::{env, path::{Component}};
 
 use crate::unix_to_date;
 
@@ -112,11 +111,16 @@ impl SystemStatus {
 
         let uptime = unix_to_date::new(sys.uptime());
 
-        for disk in sys.disks() {
-            println!("{:?}", disk.mount_point());
-        }
+        /*for disk in sys.disks() {
+            println!("{}/{}", disk.available_space(), disk.total_space());
+        }*/
 
-        //let disk = sys.disks().iter().find(|disk| disk.mount_point());
+
+        let dir = env::current_dir().unwrap();
+        for disk in dir.components() {
+            println!("{:?}", disk.as_os_str());
+        }
+        let disk = sys.disks().iter().next();
 
         Self {
             _os: format!("{} {}", os_name.clone(), os_version.clone()),
