@@ -1,7 +1,7 @@
 use cfg_if::cfg_if;
 use serde::{Deserialize, Serialize};
-use sysinfo::{Cpu, CpuExt, System, SystemExt};
-use std::{env, path::{Component}};
+use std::{env, path::Component};
+use sysinfo::{Cpu, CpuExt, DiskExt, System, SystemExt};
 
 use crate::unix_to_date;
 
@@ -115,10 +115,9 @@ impl SystemStatus {
             println!("{}/{}", disk.available_space(), disk.total_space());
         }*/
 
-
         let dir = env::current_dir().unwrap();
         for disk in dir.components() {
-            println!("{:?}", disk.as_os_str());
+            //println!("{:?}", disk.as_os_str());
         }
         let disk = sys.disks().iter().next();
 
@@ -130,7 +129,15 @@ impl SystemStatus {
             ram,
             load_average,
             uptime,
-            storage: StorageData { free: 0, total: 0, usage: 0. },
+            storage: StorageData {
+                free: disk.unwrap().available_space(),
+                total: disk.unwrap().total_space(),
+                usage: {
+                    let free =
+                        disk.unwrap().available_space() as f32 / disk.unwrap().total_space() as f32;
+                    ((1.0 - free) * 100.0).ceil()
+                },
+            },
         }
     }
 
