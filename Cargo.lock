@@ -675,6 +675,7 @@ dependencies = [
  "arc-swap",
  "cfg-if",
  "dotenvy",
+ "regex",
  "rust_socketio",
  "serde",
  "serde_json",
