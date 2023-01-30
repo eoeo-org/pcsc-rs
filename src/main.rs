@@ -7,11 +7,11 @@ fn test_function() {
     }
 }
 
+mod gpu;
 mod status;
 mod thread_message;
 mod threads;
 mod unix_to_date;
-mod gpu;
 
 use arc_swap::ArcSwap;
 use dotenvy::dotenv;
@@ -19,7 +19,9 @@ use rust_socketio::{ClientBuilder, Event, Payload, RawClient};
 use serde_json::json;
 use std::{
     env, hint, process,
-    sync::{Arc, Mutex}, thread, time::Duration
+    sync::{Arc, Mutex},
+    thread,
+    time::Duration,
 };
 use sysinfo::{System, SystemExt};
 
@@ -50,8 +52,7 @@ fn main() {
 
     let mut system = System::new_all();
 
-    let shared_data =
-        Arc::new(ArcSwap::from_pointee(SystemStatus::get(&mut system)));
+    let shared_data = Arc::new(ArcSwap::from_pointee(SystemStatus::get(&mut system)));
 
     threads::spawn_monitor(Arc::clone(&shared_data));
 
@@ -79,7 +80,7 @@ fn main() {
                 Payload::String(str) => println!("Received: {}", str),
                 Payload::Binary(bin_data) => println!("Received bytes: {:#?}", bin_data),
             };
-            
+
             let status = shared_data.load();
             if let Err(e) = socket.emit("sync", json!(status.as_ref())) {
                 dbg!(e);

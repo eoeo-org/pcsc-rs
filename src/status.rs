@@ -2,7 +2,7 @@ use cfg_if::cfg_if;
 use serde::{Deserialize, Serialize};
 use sysinfo::{Cpu, CpuExt, DiskExt, System, SystemExt};
 
-use crate::{unix_to_date, gpu};
+use crate::{gpu, unix_to_date};
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct CoreData {
@@ -59,6 +59,7 @@ pub struct SystemStatus {
     #[serde(rename = "loadavg")]
     pub(crate) load_average: Option<[f64; 3]>,
     pub(crate) uptime: String,
+    pub(crate) gpu: Option<GpuData>,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -109,7 +110,7 @@ impl SystemStatus {
             total: disk.unwrap().total_space(),
         };
 
-        println!("{:#?}", String::from_utf8_lossy(&gpu::get_info().stdout));
+        let gpu = gpu::get_info();
 
         Self {
             _os: format!("{} {}", os_name.clone(), os_version.clone()),
@@ -120,6 +121,7 @@ impl SystemStatus {
             load_average,
             uptime,
             storage,
+            gpu,
         }
     }
 
