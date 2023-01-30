@@ -25,9 +25,14 @@ pub fn get_info() -> Option<GpuData> {
             replace_seperator.replace_all(splited.get(1).expect("not found at index 1"), "");
         let splited2: Vec<_> = split2_seperator.split(&replaced).into_iter().collect();
 
+        let usage: Option<u64> = match splited2[1] {
+            "[N/A]" => None,
+            _ => Some(splited2[1].to_string().parse::<u64>().unwrap())
+        };
+
         let result = Some(GpuData {
             name: splited2[0].into(),
-            usage: splited2[1].to_string().parse::<u64>().unwrap(),
+            usage,
             memory: GpuMemory {
                 free: splited2[2].to_string().parse::<u64>().unwrap(),
                 total: splited2[3].to_string().parse::<u64>().unwrap(),

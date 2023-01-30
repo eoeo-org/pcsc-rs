@@ -44,7 +44,7 @@ pub struct GpuMemory {
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct GpuData {
     pub(crate) name: String,
-    pub(crate) usage: u64,
+    pub(crate) usage: Option<u64>,
     pub(crate) memory: GpuMemory,
 }
 
