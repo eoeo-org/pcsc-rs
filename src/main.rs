@@ -1,9 +1,17 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+#[test]
+fn test_function() {
+    if false {
+        panic!("Test Failed.");
+    }
+}
+
 mod status;
 mod thread_message;
 mod threads;
 mod unix_to_date;
+mod gpu;
 
 use arc_swap::ArcSwap;
 use dotenvy::dotenv;
@@ -11,7 +19,7 @@ use rust_socketio::{ClientBuilder, Event, Payload, RawClient};
 use serde_json::json;
 use std::{
     env, hint, process,
-    sync::{Arc, Mutex}, thread, time::Duration, path::Path
+    sync::{Arc, Mutex}, thread, time::Duration
 };
 use sysinfo::{System, SystemExt};
 
@@ -28,7 +36,6 @@ impl App {
 
     fn on_message(&mut self, payload: Payload, _socket: RawClient) {
         println!("message: {:#?}", payload);
-        //socket.emit("disconnect", "received message").expect("Server unreachable");
         self.finish = true;
     }
 }
@@ -41,7 +48,6 @@ fn main() {
 
     dotenv().expect(".env file not found");
 
-    // system tukuru
     let mut system = System::new_all();
 
     let shared_data =

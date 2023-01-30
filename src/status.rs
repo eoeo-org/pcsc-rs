@@ -1,9 +1,8 @@
 use cfg_if::cfg_if;
 use serde::{Deserialize, Serialize};
-use std::{env, path::Component};
 use sysinfo::{Cpu, CpuExt, DiskExt, System, SystemExt};
 
-use crate::unix_to_date;
+use crate::{unix_to_date, gpu};
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct CoreData {
@@ -22,24 +21,31 @@ impl From<&Cpu> for CoreData {
 pub struct CpuData {
     pub(crate) model: String,
     pub(crate) cpus: Vec<CoreData>,
-    #[serde(rename = "percent")]
-    pub(crate) average_usage: f32,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct RamData {
     pub(crate) free: u64,
     pub(crate) total: u64,
-    #[serde(rename = "percent")]
-    pub(crate) usage: f32,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct StorageData {
     pub(crate) free: u64,
     pub(crate) total: u64,
-    #[serde(rename = "percent")]
-    pub(crate) usage: f32,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
+pub struct GpuMemory {
+    pub(crate) free: u64,
+    pub(crate) total: u64,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
+pub struct GpuData {
+    pub(crate) name: String,
+    pub(crate) usage: u64,
+    pub(crate) memory: GpuMemory,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -82,44 +88,28 @@ impl SystemStatus {
             }
         };
 
-        //println!("=> disk:");
-        //println!("{:?}", sys.disks().iter().position(|&disk|));
-
-        //println!("=> system:");
-        //println!("total memory: {} bytes", sys.total_memory());
-        //println!("used memory : {} bytes", sys.used_memory());
-
         let cpus: Vec<CoreData> = sys.cpus().iter().map(Into::into).collect();
-
-        let cpu_percent = cpus.iter().map(|core| core.usage).sum::<f32>() / cpus.len() as f32;
-        let cpu_percent = cpu_percent.round();
 
         let cpu = CpuData {
             model: cpu_name.clone(),
             cpus,
-            average_usage: cpu_percent,
         };
 
         let ram = RamData {
             free: sys.free_memory(),
             total: sys.total_memory(),
-            usage: {
-                let free = sys.free_memory() as f32 / sys.total_memory() as f32;
-                ((1.0 - free) * 100.0).ceil()
-            },
         };
 
         let uptime = unix_to_date::new(sys.uptime());
 
-        /*for disk in sys.disks() {
-            println!("{}/{}", disk.available_space(), disk.total_space());
-        }*/
-
-        let dir = env::current_dir().unwrap();
-        for disk in dir.components() {
-            //println!("{:?}", disk.as_os_str());
-        }
         let disk = sys.disks().iter().next();
+
+        let storage = StorageData {
+            free: disk.unwrap().available_space(),
+            total: disk.unwrap().total_space(),
+        };
+
+        println!("{:#?}", String::from_utf8_lossy(&gpu::get_info().stdout));
 
         Self {
             _os: format!("{} {}", os_name.clone(), os_version.clone()),
@@ -129,15 +119,7 @@ impl SystemStatus {
             ram,
             load_average,
             uptime,
-            storage: StorageData {
-                free: disk.unwrap().available_space(),
-                total: disk.unwrap().total_space(),
-                usage: {
-                    let free =
-                        disk.unwrap().available_space() as f32 / disk.unwrap().total_space() as f32;
-                    ((1.0 - free) * 100.0).ceil()
-                },
-            },
+            storage,
         }
     }
 
