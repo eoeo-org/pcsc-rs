@@ -3,6 +3,7 @@ name: DO NOT MERGE
 on:
   pull_request:
     types:
+      - opened
       - labeled
       - unlabeled
 
