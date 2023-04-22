@@ -32,6 +32,12 @@ pub struct RamData {
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
+pub struct SwapData {
+    pub(crate) free: u64,
+    pub(crate) total: u64,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct StorageData {
     pub(crate) free: u64,
     pub(crate) total: u64,
@@ -57,6 +63,7 @@ pub struct SystemStatus {
     pub(crate) version: String,
     pub(crate) cpu: CpuData,
     pub(crate) ram: RamData,
+    pub(crate) swap: SwapData,
     pub(crate) storage: StorageData,
     #[serde(rename = "loadavg")]
     pub(crate) load_average: Option<[f64; 3]>,
@@ -103,6 +110,11 @@ impl SystemStatus {
             total: sys.total_memory(),
         };
 
+        let swap = SwapData {
+            free: sys.free_swap(),
+            total: sys.total_swap(),
+        };
+
         let uptime = unix_to_date::new(sys.uptime());
 
         let disk = sys.disks().iter().next();
@@ -120,6 +132,7 @@ impl SystemStatus {
             hostname,
             cpu,
             ram,
+            swap,
             load_average,
             uptime,
             storage,
