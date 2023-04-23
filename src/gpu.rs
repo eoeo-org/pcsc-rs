@@ -2,6 +2,9 @@ use regex::Regex;
 
 use crate::status::{GpuData, GpuMemory};
 use std::process::Command;
+use std::os::windows::process::CommandExt;
+
+const CREATE_NO_WINDOW: u32 = 0x08000000;
 
 pub fn get_info() -> Option<GpuData> {
     let output = Command::new("nvidia-smi")
@@ -9,6 +12,7 @@ pub fn get_info() -> Option<GpuData> {
             "--format=csv",
             "--query-gpu=name,utilization.gpu,memory.free,memory.total",
         ])
+        .creation_flags(CREATE_NO_WINDOW)
         .output();
     if output.is_err() {
         return None;
@@ -27,7 +31,7 @@ pub fn get_info() -> Option<GpuData> {
 
         let usage: Option<u64> = match splited2[1] {
             "[N/A]" => None,
-            _ => Some(splited2[1].to_string().parse::<u64>().unwrap())
+            _ => Some(splited2[1].to_string().parse::<u64>().unwrap()),
         };
 
         let result = Some(GpuData {

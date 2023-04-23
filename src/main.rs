@@ -16,6 +16,7 @@ mod unix_to_date;
 use arc_swap::ArcSwap;
 use dotenvy::dotenv;
 use rust_socketio::{ClientBuilder, Event, Payload, RawClient};
+use serde_derive::{Deserialize, Serialize};
 use serde_json::json;
 use std::{
     env, hint, process,
@@ -42,14 +43,35 @@ impl App {
     }
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+struct AppConfig {
+    uri: String,
+    password: Option<String>,
+    hostname: Option<String>,
+}
+
+impl ::std::default::Default for AppConfig {
+    fn default() -> Self {
+        Self {
+            uri: "https://pcss.eov2.com".into(),
+            password: None,
+            hostname: None,
+        }
+    }
+}
+
 fn main() {
+    dotenv().expect(".env file not found");
+
     if !System::IS_SUPPORTED {
         println!("This OS isn't supported (yet?).");
         process::exit(95);
     }
 
-    dotenv().expect(".env file not found");
+    start();
+}
 
+fn start() {
     let mut system = System::new_all();
 
     let shared_data = Arc::new(ArcSwap::from_pointee(SystemStatus::get(&mut system)));
