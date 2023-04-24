@@ -22,7 +22,7 @@ use std::{
     env, hint, process,
     sync::{Arc, Mutex},
     thread,
-    time::Duration,
+    time::Duration, path::Path,
 };
 use sysinfo::{System, SystemExt};
 
@@ -61,10 +61,18 @@ impl ::std::default::Default for AppConfig {
 }
 
 fn main() {
-    dotenv().expect(".env file not found");
+    let rs = Path::new(".env").exists();
+    if rs {
+        dotenv().expect(".env file not found");
+    }
 
     if !System::IS_SUPPORTED {
         println!("This OS isn't supported (yet?).");
+        process::exit(95);
+    }
+
+    if !env::var("PASS").is_ok() {
+        println!("The environment variable Password (PASS) is not specified.");
         process::exit(95);
     }
 
