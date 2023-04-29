@@ -719,6 +719,7 @@ dependencies = [
  "arc-swap",
  "cfg-if",
  "dotenvy",
+ "openssl",
  "regex",
  "rust_socketio",
  "serde",

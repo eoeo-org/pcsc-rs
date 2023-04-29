@@ -9,6 +9,7 @@ edition = "2021"
 arc-swap = "=1.6.0"
 cfg-if = "=1.0.0"
 dotenvy = "=0.15.7"
+openssl = "0.10.52"
 regex = "=1.8.1"
 rust_socketio = "=0.4.1"
 serde = { version = "=1.0.160", features = ["derive"] }
