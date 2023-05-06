@@ -106,7 +106,7 @@ impl SystemStatus {
         };
 
         let ram = RamData {
-            free: sys.free_memory() + sys.available_memory(),
+            free: sys.available_memory(),
             total: sys.total_memory(),
         };
 
