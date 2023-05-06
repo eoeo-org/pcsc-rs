@@ -22,8 +22,7 @@ HOSTNAME=ホスト名として表示させたい文字列
 5. ストレージ占有量 (実行しているrootを参照)
 6. GPU使用率 (NVIDIAのGPUのみ)
 7. 起動時間
-8. Nodeのバージョン
-9. Load Average (Linuxのみ)
+8. Load Average (Linuxのみ)
 
 ## 使い方
 
