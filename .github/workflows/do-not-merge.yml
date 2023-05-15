@@ -14,7 +14,6 @@ permissions:
 jobs:
   do-not-merge:
     name: '!!!'
-    if: github.event.label.name == 'do NOT merge!!!'
     runs-on: ubuntu-22.04
     steps:
       - run: |
