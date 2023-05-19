@@ -46,7 +46,7 @@ jobs:
         with:
           toolchain: stable
           target: ${{ matrix.target }}
-      - uses: Swatinem/rust-cache@060bda31e0be4f453bb6ed2d7e5427b31734ad01
+      - uses: Swatinem/rust-cache@ad97570a019829bb061d1abea547dac4b8b944d6
         with:
           key: ${{ matrix.target }}
       - uses: actions-rs/cargo@9e120dd99b0fbad1c065f686657e914e76bd7b72
