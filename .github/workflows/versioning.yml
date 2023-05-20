@@ -26,7 +26,7 @@ jobs:
           git config push.default current
       - run: |
           version_string=$(awk -F'[ ="]+' '$1 ~ /^version/ { print $2; exit }' Cargo.toml)
-          pr=$( (git log --oneline @..."$version_string" || git log --oneline) | sed -nE 's/.+\((#[0-9]+)\)$/\1/p')
+          pr=$( (git log --oneline @...v"$version_string" || git log --oneline) | sed -nE 's/.+\((#[0-9]+)\)$/\1/p')
           labels=$( echo "$pr" | xargs -n1 gh pr view --json labels -q '.labels[].name')
           mapfile -t version < <(printf '%s\n' "${version_string//./$'\n'}")
           if printf '%s\n' "${labels[@]}" | grep -qx 'release'; then
