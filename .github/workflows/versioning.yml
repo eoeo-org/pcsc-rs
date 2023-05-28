@@ -1,0 +1,54 @@
+name: Versioning
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  versioning:
+    name: 'Versioning'
+    runs-on: ubuntu-22.04
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@f095bcc56b7c2baf48f3ac70d6d6782f4f553222
+        with:
+          fetch-depth: 0
+      - name: Setup git
+        run: |
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git config push.default current
+      - run: |
+          version_string=$(awk -F'[ ="]+' '$1 ~ /^version/ { print $2; exit }' Cargo.toml)
+          pr=$( (git log --oneline @...v"$version_string" || git log --oneline) | sed -nE 's/.+\((#[0-9]+)\)$/\1/p')
+          labels=$( echo "$pr" | xargs -n1 gh pr view --json labels -q '.labels[].name')
+          mapfile -t version < <(printf '%s\n' "${version_string//./$'\n'}")
+          if printf '%s\n' "${labels[@]}" | grep -qx 'release'; then
+            exit 0
+          elif printf '%s\n' "${labels[@]}" | grep -qx 'semver:major'; then
+            ((++version[0]))
+            version[1]=0
+            version[2]=0
+          elif printf '%s\n' "${labels[@]}" | grep -qx 'semver:minor'; then
+            ((++version[1]))
+            version[2]=0
+          elif printf '%s\n' "${labels[@]}" | grep -qx 'semver:patch'; then
+            ((++version[2]))
+          else
+            exit 0
+          fi
+          new_version_string=$(printf ".%s" "${version[@]}")
+          new_version_string=${new_version_string:1}
+          git switch -C release
+          VERSION=$new_version_string perl -i -pe 's/(version = ").+/\1$ENV{VERSION}"/ if !$done; $done ||= $&' Cargo.toml
+          cargo update -p "$(awk -F'[ ="]+' '$1 ~ /^name/ { print $2; exit }' Cargo.toml)"
+          echo -e "Release v${new_version_string}\n\nPR:\n${pr}" | git commit --no-gpg-sign -a --file=-
+          git push -f
+          gh pr create --base main --fill --label release || echo -e "PR:\n${pr}" | gh pr edit --title "Release v${new_version_string}" --body-file -
+          gh pr merge --auto --delete-branch --squash

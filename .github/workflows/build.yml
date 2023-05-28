@@ -1,0 +1,75 @@
+name: build
+on: 
+  push:
+    branches:
+      - 'develop'
+  pull_request:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [aarch64-unknown-linux-gnu, aarch64-unknown-linux-musl, x86_64-unknown-netbsd]
+        use-cross: [true]
+        include:
+          - target: x86_64-unknown-linux-gnu
+            use-cross: false
+          - target: x86_64-unknown-linux-musl
+            use-cross: false
+          - os: macos-12
+            target: aarch64-apple-darwin
+          - os: macos-12
+            target: x86_64-apple-darwin
+          - os: windows-2022
+            target: x86_64-pc-windows-msvc
+          - os: windows-2022
+            target: x86_64-pc-windows-gnu
+    runs-on: ${{ matrix.os || 'ubuntu-22.04'}}
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_REPO: ${{ github.repository }}
+    defaults:
+      run:
+        shell: bash -xe {0}
+    steps:
+      - name: Install musl tools
+        if: matrix.target == 'x86_64-unknown-linux-musl'
+        run: |
+          sudo apt-get install -y musl-tools --no-install-recommends
+      - uses: actions/checkout@f095bcc56b7c2baf48f3ac70d6d6782f4f553222
+      - uses: actions-rs/toolchain@88dc2356392166efad76775c878094f4e83ff746
+        with:
+          toolchain: stable
+          target: ${{ matrix.target }}
+      - uses: Swatinem/rust-cache@988c164c3d0e93c4dbab36aaf5bbeb77425b2894
+        with:
+          key: ${{ matrix.target }}
+      - uses: actions-rs/cargo@9e120dd99b0fbad1c065f686657e914e76bd7b72
+        with:
+          use-cross: ${{ !matrix.os && matrix.use-cross }}
+          command: build
+          args: --locked --release --target ${{ matrix.target }}
+      - uses: actions/upload-artifact@65d862660abb392b8c4a3d1195a2108db131dd05
+        with:
+          name: ${{ matrix.target }}
+          path: |
+            target/${{ matrix.target }}/release/pcsc-rs
+            target/${{ matrix.target }}/release/pcsc-rs.exe
+      - name: Upload to release
+        if: github.event_name == 'release'
+        working-directory: target/${{ matrix.target }}/release/
+        run: |
+          if [ -e pcsc-rs.exe ]; then
+            filename="pcsc-rs-${{ github.event.release.tag_name }}-${{ matrix.target }}.exe"
+            mv pcsc-rs.exe "$filename"
+            gh release upload ${{ github.event.release.tag_name }} "$filename"#${{ matrix.target }} --clobber
+          else
+            filename="pcsc-rs-${{ github.event.release.tag_name }}-${{ matrix.target }}"
+            mv pcsc-rs "$filename"
+            gh release upload ${{ github.event.release.tag_name }} "$filename"#${{ matrix.target }} --clobber
+          fi

@@ -1,0 +1,24 @@
+name: DO NOT MERGE
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - labeled
+      - unlabeled
+
+permissions:
+  pull-requests: read
+
+jobs:
+  do-not-merge:
+    name: '!!!'
+    runs-on: ubuntu-22.04
+    steps:
+      - run: |
+          if ${{ contains(github.event.pull_request.labels.*.name, 'do NOT merge!!!') }}; then
+            false
+          else
+            true
+          fi

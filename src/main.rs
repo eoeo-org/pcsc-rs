@@ -1,108 +1,147 @@
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+
+#[test]
+fn test_function() {
+    if false {
+        panic!("Test Failed.");
+    }
+}
+
+mod gpu;
 mod status;
+mod thread_message;
+mod threads;
+mod unix_to_date;
 
+use arc_swap::ArcSwap;
 use dotenvy::dotenv;
-use rust_socketio::{ClientBuilder, Payload, RawClient};
+use rust_socketio::{ClientBuilder, Event, Payload, RawClient};
+use serde_derive::{Deserialize, Serialize};
 use serde_json::json;
-use std::env;
-use std::time::Duration;
-use sysinfo::{CpuExt, System, SystemExt};
+use std::{
+    env, hint, process,
+    sync::{Arc, Mutex},
+    thread,
+    time::Duration, path::Path,
+};
+use sysinfo::{System, SystemExt};
 
-use crate::status::{CpuData, CpuCoreUsage, StatusData};
+use crate::status::SystemStatus;
+
+struct App {
+    pub finish: bool,
+}
+
+impl App {
+    pub fn new() -> Self {
+        App { finish: false }
+    }
+
+    fn on_message(&mut self, payload: Payload, _socket: RawClient) {
+        println!("message: {:#?}", payload);
+        self.finish = true;
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+struct AppConfig {
+    uri: String,
+    password: Option<String>,
+    hostname: Option<String>,
+}
+
+impl ::std::default::Default for AppConfig {
+    fn default() -> Self {
+        Self {
+            uri: "https://pcss.eov2.com".into(),
+            password: None,
+            hostname: None,
+        }
+    }
+}
 
 fn main() {
-    dotenv().expect(".env file not found");
+    let rs = Path::new(".env").exists();
+    if rs {
+        dotenv().expect(".env file not found");
+    }
 
-    /*for (key, value) in env::vars() {
-        println!("{key}: {value}");
-    }*/
+    if !System::IS_SUPPORTED {
+        println!("This OS isn't supported (yet?).");
+        process::exit(95);
+    }
 
-    println!("Hello, world!");
+    if !env::var("PASS").is_ok() {
+        println!("The environment variable Password (PASS) is not specified.");
+        process::exit(95);
+    }
+
+    start();
+}
+
+fn start() {
+    let mut system = System::new_all();
+
+    let shared_data = Arc::new(ArcSwap::from_pointee(SystemStatus::get(&mut system)));
+
+    threads::spawn_monitor(Arc::clone(&shared_data));
+
+    let pcsc_uri = env::var("PCSC_URI").unwrap_or_else(|_| "https://pcss.eov2.com".into());
+
+    println!("This OS is supported!");
+    println!("Hello, world! {}", pcsc_uri);
+
+    let app = Arc::new(Mutex::new(App::new()));
+    let event_app = app.clone();
+
+    ClientBuilder::new(pcsc_uri)
+        .namespace("/server")
+        .on(Event::Connect, |_, _| println!("Connected"))
+        .on(Event::Close, |_, _| println!("Disconnected"))
+        .on("hi", |payload, socket| {
+            match payload {
+                Payload::String(str) => println!("Received: {}", str),
+                Payload::Binary(bin_data) => println!("Received bytes: {:#?}", bin_data),
+            };
+            init(socket);
+        })
+        .on("sync", move |payload, socket| {
+            match payload {
+                Payload::String(str) => println!("Received: {}", str),
+                Payload::Binary(bin_data) => println!("Received bytes: {:#?}", bin_data),
+            };
+
+            let status = shared_data.load();
+            if let Err(e) = socket.emit("sync", json!(status.as_ref())) {
+                dbg!(e);
+            }
+        })
+        .on(Event::Message, move |payload, client| {
+            event_app.lock().unwrap().on_message(payload, client)
+        })
+        .on(Event::Error, |err, _| match err {
+            Payload::String(str) => eprintln!("Error: {}", str),
+            Payload::Binary(bin_data) => eprintln!("Error: {:#?}", bin_data),
+        })
+        .connect()
+        .expect("Connection failed");
+
+    while !app.lock().unwrap().finish {
+        hint::spin_loop();
+        thread::sleep(Duration::from_secs(1));
+    }
+}
+
+fn init(socket: RawClient) {
+    print!("hi from server");
 
     let mut sys = System::new_all();
     sys.refresh_all();
 
-    let cpu_name = sys.cpus()[0].brand().to_string();
-    let os_name = sys.name().expect("Failed to get os name");
-    let os_version = sys.os_version().expect("Failed to get os version");
-    let hostname = sys.host_name().expect("Failed to get hostname");
+    let pass = env::var("PASS").unwrap_or_default();
 
-    println!("System OS: {} {}", os_name, os_version);
-
-    let mut system_info = StatusData {
-        _os: format!("{} {}", os_name, os_version),
-        hostname: hostname,
-        version: "".to_string(),
-        cpu: CpuData {
-            model: "".to_string(),
-            cpus: vec![],
-            percent: 0,
-        },
-    };
-
-    println!("{}", json!(system_info));
-
-    let send_system_info = |payload: Payload, socket: RawClient| match payload {
-        Payload::String(str) => {
-            println!("Received: {}", str);
-            //socket.emit("test", json!(system_info)).expect("Failed to emit.");
-        }
-        _ => {}
-    };
-
-    let socket = ClientBuilder::new("http://localhost:4200")
-        .namespace("/")
-        .on("connect", |_, _| println!("Connected"))
-        .on("disconnect", |_, _| println!("Disconnected"))
-        .on("hi", send_system_info)
-        .on("sync", send_system_info)
-        .on("error", |err, _| eprintln!("Error: {:#?}", err))
-        .connect()
-        .expect("Connection failed");
-
-    let json_payload = json!({"token": 123});
+    let status = SystemStatus::get(&mut sys);
     socket
-        .emit("foo", json_payload)
-        .expect("Server unreachable");
-
-    // Update all information
-
-    let load_avg = sys.load_average();
-    println!(
-        "one minute: {}, five minutes: {}, fifteen minutes: {}",
-        load_avg.one, load_avg.five, load_avg.fifteen,
-    );
-
-    // Disks
-    println!("=> disks:");
-    for disk in sys.disks() {
-        println!("{:?}", disk);
-    }
-
-    println!("=> system:");
-    // RAM and swap:
-    println!("total memory: {} bytes", sys.total_memory());
-    println!("used memory : {} bytes", sys.used_memory());
-    println!("total swap  : {} bytes", sys.total_swap());
-    println!("used swap   : {} bytes", sys.used_swap());
-
-    // System information:
-    println!(
-        "System host name: {}",
-        sys.host_name().expect("Failed to get hostname")
-    );
-
-    // Number of CPUs:
-    println!("NB CPUs: {}", sys.cpus().len());
-
-    // CPU Usage
-    loop {
-        sys.refresh_cpu(); // Refreshing CPU information.
-        println!("---------------");
-        //println!("{}", sys.cpus());
-        for cpu in sys.cpus() {
-            println!("{}%", cpu.cpu_usage());
-        }
-        println!("---------------");
-        std::thread::sleep(Duration::from_secs(1));
-    }
+        .emit("hi", json!(status.with_pass(pass)))
+        .expect("Failed to emit.");
 }
