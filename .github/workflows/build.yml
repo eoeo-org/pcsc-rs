@@ -42,18 +42,19 @@ jobs:
         run: |
           sudo apt-get install -y musl-tools --no-install-recommends
       - uses: actions/checkout@f095bcc56b7c2baf48f3ac70d6d6782f4f553222
-      - uses: actions-rs/toolchain@88dc2356392166efad76775c878094f4e83ff746
+      - uses: dtolnay/rust-toolchain@b44cb146d03e8d870c57ab64b80f04586349ca5d
         with:
           toolchain: stable
           target: ${{ matrix.target }}
       - uses: Swatinem/rust-cache@988c164c3d0e93c4dbab36aaf5bbeb77425b2894
         with:
           key: ${{ matrix.target }}
-      - uses: actions-rs/cargo@9e120dd99b0fbad1c065f686657e914e76bd7b72
+      - name: Install cross
+        if: ${{ !matrix.os && matrix.use-cross }}
+        uses: taiki-e/install-action@9aedfccc54976d6f7627b43a8fc2d1aefc1d3f14
         with:
-          use-cross: ${{ !matrix.os && matrix.use-cross }}
-          command: build
-          args: --locked --release --target ${{ matrix.target }}
+          tool: cross
+      - run: ${{ (!matrix.os && matrix.use-cross) && 'cross' || 'cargo' }} build --locked --release --target ${{ matrix.target }}
       - uses: actions/upload-artifact@65d862660abb392b8c4a3d1195a2108db131dd05
         with:
           name: ${{ matrix.target }}
