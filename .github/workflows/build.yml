@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [aarch64-unknown-linux-gnu, aarch64-unknown-linux-musl, x86_64-unknown-netbsd]
+        target: [aarch64-unknown-linux-gnu, aarch64-unknown-linux-musl]
         use-cross: [true]
         include:
           - target: x86_64-unknown-linux-gnu
