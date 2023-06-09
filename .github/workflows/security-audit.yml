@@ -10,7 +10,7 @@ jobs:
   security_audit:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@f095bcc56b7c2baf48f3ac70d6d6782f4f553222
+      - uses: actions/checkout@96f53100ba2a5449eb71d2e6604bbcd94b9449b5
       - uses: actions-rs/audit-check@35b7b53b1e25b55642157ac01b4adceb5b9ebef3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
