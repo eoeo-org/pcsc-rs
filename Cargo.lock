@@ -81,12 +81,6 @@ checksum = "9e1b586273c5702936fe7b7d6896644d8be71e6314cfe09d3167c95f712589e8"
 
 [[package]]
 name = "base64"
-version = "0.20.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0ea22880d78093b0cbe17c89f64a7d457941e65759157ec6cb31a31d652b05e5"
-
-[[package]]
-name = "base64"
 version = "0.21.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "604178f6c5c21f02dc555784810edfb88d34ac2c73b2eae109655649ee73ce3d"
@@ -111,12 +105,6 @@ name = "bumpalo"
 version = "3.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a3e2c3daef883ecc1b5d58c15adae93470a91d425f3532ba1695849656af3fc1"
-
-[[package]]
-name = "byte"
-version = "0.2.6"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7cfd4a5b862cb6bfcaf4b9803e887a22393dd5c1ac9e2d1e131d516047eabd01"
 
 [[package]]
 name = "byteorder"
@@ -902,16 +890,15 @@ dependencies = [
 
 [[package]]
 name = "rust_engineio"
-version = "0.4.1"
+version = "0.4.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "82be271500ebf0492a4e5cf234be482f1ff09eae100b5e52dd3f247fea28f55d"
+checksum = "6c5e3315b972a7930bf8ef6898dd13e09e3b35a41ff49c23bf45d40ac6046da0"
 dependencies = [
  "adler32",
  "async-stream",
  "async-trait",
- "base64 0.20.0",
+ "base64 0.21.2",
  "bytes",
- "crossbeam-utils",
  "futures-util",
  "http",
  "native-tls",
@@ -927,22 +914,24 @@ dependencies = [
 
 [[package]]
 name = "rust_socketio"
-version = "0.4.1"
+version = "0.4.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f75f9a5212781aa18fc87cb81e134de245061d407809a094b1b8869ed812b7b7"
+checksum = "745351c2117f67a89878a1c1bc33b26d96bb71f1ed78fc1cb227ad6e0220be3e"
 dependencies = [
  "adler32",
+ "async-stream",
  "backoff",
- "base64 0.20.0",
- "byte",
+ "base64 0.21.2",
  "bytes",
- "crossbeam-utils",
+ "futures-util",
+ "log",
  "native-tls",
  "rand",
- "regex",
  "rust_engineio",
+ "serde",
  "serde_json",
  "thiserror",
+ "tokio",
  "url",
 ]
 
