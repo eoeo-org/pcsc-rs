@@ -41,21 +41,20 @@ jobs:
         if: matrix.target == 'x86_64-unknown-linux-musl'
         run: |
           sudo apt-get install -y musl-tools --no-install-recommends
-      - uses: actions/checkout@96f53100ba2a5449eb71d2e6604bbcd94b9449b5
-      - uses: dtolnay/rust-toolchain@0e66bd3e6b38ec0ad5312288c83e47c143e6b09e
+      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
+      - uses: dtolnay/rust-toolchain@4f366e621dc8fa63f557ca04b8f4361824a35a45 # stable
         with:
-          toolchain: stable
           target: ${{ matrix.target }}
-      - uses: Swatinem/rust-cache@be7377e68e88e0998e53402e5414eca81c4ac820
+      - uses: Swatinem/rust-cache@2656b87321093db1cb55fbd73183d195214fdfd1 # v2.5.0
         with:
           key: ${{ matrix.target }}
       - name: Install cross
         if: ${{ !matrix.os && matrix.use-cross }}
-        uses: taiki-e/install-action@b5e941de231aec9879b90aa8e3ba654f74ad58b6
+        uses: taiki-e/install-action@b5e941de231aec9879b90aa8e3ba654f74ad58b6 # 2.12.4
         with:
           tool: cross
       - run: ${{ (!matrix.os && matrix.use-cross) && 'cross' || 'cargo' }} build --locked --release --target ${{ matrix.target }}
-      - uses: actions/upload-artifact@65d862660abb392b8c4a3d1195a2108db131dd05
+      - uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         with:
           name: ${{ matrix.target }}
           path: |
