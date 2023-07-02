@@ -6,9 +6,16 @@
     ":rebaseStalePrs",
     ":disableRateLimiting",
     ":maintainLockFilesWeekly",
-    ":label(dependencies)",
+    ":labels(dependencies, semver:none)",
     ":assignAndReview(kazukazu123123)",
     ":semanticCommits",
-    ":disablePrControls"
+    ":disablePrControls",
+    "helpers:pinGitHubActionDigests"
+  ],
+  "packageRules": [
+    {
+      "matchDepTypes": ["dependencies", "require"],
+      "labels": ["dependencies", "semver:patch"]
+    }
   ]
 }
