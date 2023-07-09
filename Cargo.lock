@@ -947,9 +947,9 @@ dependencies = [
 
 [[package]]
 name = "rust_engineio"
-version = "0.4.2"
+version = "0.4.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6c5e3315b972a7930bf8ef6898dd13e09e3b35a41ff49c23bf45d40ac6046da0"
+checksum = "62456600d61cc4655557cc0e9dc6af5502b5bb0a5250e8629f10b8bc407b9cee"
 dependencies = [
  "adler32",
  "async-stream",
@@ -971,16 +971,14 @@ dependencies = [
 
 [[package]]
 name = "rust_socketio"
-version = "0.4.2"
+version = "0.4.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "745351c2117f67a89878a1c1bc33b26d96bb71f1ed78fc1cb227ad6e0220be3e"
+checksum = "623355836137c602b50f987678bc5e1ded5cbcf8a7eb5a4a8e86aafbb66bd077"
 dependencies = [
  "adler32",
- "async-stream",
  "backoff",
  "base64 0.21.2",
  "bytes",
- "futures-util",
  "log",
  "native-tls",
  "rand",
@@ -988,7 +986,6 @@ dependencies = [
  "serde",
  "serde_json",
  "thiserror",
- "tokio",
  "url",
 ]
 
