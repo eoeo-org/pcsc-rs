@@ -39,6 +39,7 @@ pub struct SwapData {
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct StorageData {
+    pub(crate) name: String,
     pub(crate) free: u64,
     pub(crate) total: u64,
 }
@@ -64,7 +65,7 @@ pub struct SystemStatus {
     pub(crate) cpu: CpuData,
     pub(crate) ram: RamData,
     pub(crate) swap: SwapData,
-    pub(crate) storage: StorageData,
+    pub(crate) storages: Vec<StorageData>,
     #[serde(rename = "loadavg")]
     pub(crate) load_average: Option<[f64; 3]>,
     pub(crate) uptime: String,
@@ -117,12 +118,16 @@ impl SystemStatus {
 
         let uptime = unix_to_date::new(sys.uptime());
 
-        let disk = sys.disks().iter().next();
+        let disks = sys.disks();
 
-        let storage = StorageData {
-            free: disk.unwrap().available_space(),
-            total: disk.unwrap().total_space(),
-        };
+        let storages: Vec<StorageData> = disks
+            .iter()
+            .map(|disk| StorageData {
+                name: disk.name().to_string_lossy().to_string(),
+                free: disk.available_space(),
+                total: disk.total_space(),
+            })
+            .collect();
 
         let gpu = gpu::get_info();
 
@@ -135,7 +140,7 @@ impl SystemStatus {
             swap,
             load_average,
             uptime,
-            storage,
+            storages,
             gpu,
         }
     }
