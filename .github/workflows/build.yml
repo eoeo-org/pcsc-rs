@@ -1,11 +1,14 @@
 name: build
-on: 
+on:
   push:
     branches:
       - 'main'
   pull_request:
-  release:
-    types: [published]
+  workflow_call:
+    inputs:
+      tag-name:
+        required: true
+        type: string
 
 jobs:
   build:
@@ -61,15 +64,15 @@ jobs:
             target/${{ matrix.target }}/release/pcsc-rs
             target/${{ matrix.target }}/release/pcsc-rs.exe
       - name: Upload to release
-        if: github.event_name == 'release'
+        if: ${{ inputs.tag-name }}
         working-directory: target/${{ matrix.target }}/release/
         run: |
           if [ -e pcsc-rs.exe ]; then
-            filename="pcsc-rs-${{ github.event.release.tag_name }}-${{ matrix.target }}.exe"
+            filename="pcsc-rs-${{ inputs.tag-name }}-${{ matrix.target }}.exe"
             mv pcsc-rs.exe "$filename"
-            gh release upload ${{ github.event.release.tag_name }} "$filename"#${{ matrix.target }} --clobber
+            gh release upload ${{ inputs.tag-name }} "$filename"#${{ matrix.target }} --clobber
           else
-            filename="pcsc-rs-${{ github.event.release.tag_name }}-${{ matrix.target }}"
+            filename="pcsc-rs-${{ inputs.tag-name }}-${{ matrix.target }}"
             mv pcsc-rs "$filename"
-            gh release upload ${{ github.event.release.tag_name }} "$filename"#${{ matrix.target }} --clobber
+            gh release upload ${{ inputs.tag-name }} "$filename"#${{ matrix.target }} --clobber
           fi
