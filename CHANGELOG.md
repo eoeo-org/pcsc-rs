@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.1.1](https://github.com/kazukazu123123/pcsc-rs/compare/v1.1.0...v1.1.1) (2023-10-16)
+
+
+### Bug Fixes
+
+* **deps:** update rust crate regex to v1.10.0 ([#258](https://github.com/kazukazu123123/pcsc-rs/issues/258)) ([dec6949](https://github.com/kazukazu123123/pcsc-rs/commit/dec6949d5fd7cecc0c295ede88004cb1ef3eb5c7))
+* **deps:** update rust crate regex to v1.10.1 ([#261](https://github.com/kazukazu123123/pcsc-rs/issues/261)) ([74b85c1](https://github.com/kazukazu123123/pcsc-rs/commit/74b85c1e9714fc793da163d1d8a90ec61ea40d64))
+* **deps:** update rust crate regex to v1.9.6 ([#250](https://github.com/kazukazu123123/pcsc-rs/issues/250)) ([6f58010](https://github.com/kazukazu123123/pcsc-rs/commit/6f5801085aefb1cdaa9f11cfea813ee308a41786))
+* **deps:** update serde monorepo to v1.0.189 ([#260](https://github.com/kazukazu123123/pcsc-rs/issues/260)) ([2c88aeb](https://github.com/kazukazu123123/pcsc-rs/commit/2c88aeb9639a22fb700eed18ec882de489e42e2f))
+
 ## [1.1.0](https://github.com/kazukazu123123/pcsc-rs/compare/v1.0.0...v1.1.0) (2023-09-22)
 
 
