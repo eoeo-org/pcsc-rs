@@ -13,7 +13,7 @@ regex = "=1.10.2"
 rust_socketio = "=0.4.3"
 serde = { version = "=1.0.192", features = ["derive"] }
 serde_derive = "=1.0.192"
-serde_json = "=1.0.107"
+serde_json = "=1.0.108"
 sysinfo = "=0.29.10"
 
 [target.'cfg(windows)'.build-dependencies]
