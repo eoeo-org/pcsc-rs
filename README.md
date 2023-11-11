@@ -3,8 +3,11 @@
 PC の状態を取得し、[PC Status](https://pc-stats.eov2.com/)に送信、表示するツールです。
 
 ![Preview - Overview](https://cdn.discordapp.com/attachments/916525261409898527/1070176168948539452/0UAAAAASUVORK5CYII.png)
-![Preview - Focus to Windows]()
-![Preview - Focus to Linux]()
+
+<p>
+<img src="https://cdn.discordapp.com/attachments/1113337313787916349/1172992924917702696/image.png">
+<img src="https://cdn.discordapp.com/attachments/1113337313787916349/1172992925186134136/image.png">
+</p>
 
 ## 注意
 
