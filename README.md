@@ -23,7 +23,7 @@ HOSTNAME=ホスト名として表示させたい文字列
      マウスオーバーで全て表示されます。
 2. OS のバージョン (e.g. `Windows 10 Home(Windows_NT win32 x64 10.0.19044)` or `Windows 10 (19045)`)
 3. CPU 名、CPU 使用率 (全体, コアごと) (e.g. `AMD Ryzen 5 3500 6-Core Processor`)
-4. 物理メモリ使用量、スワップメモリ使用量 (Windows のみ)
+4. 物理メモリ使用量、スワップメモリ使用量
 5. マウントされているストレージ使用量 (実行されている root を参照)
 6. GPU 使用率、GPU メモリ使用量 (NVIDIA GPU のみ)
 7. 連続起動時間
