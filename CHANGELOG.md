@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.2](https://github.com/kazukazu123123/pcsc-rs/compare/v1.1.1...v1.1.2) (2023-11-12)
+
+
+### Bug Fixes
+
+* **deps:** update rust crate openssl to v0.10.58 ([#279](https://github.com/kazukazu123123/pcsc-rs/issues/279)) ([06e19e9](https://github.com/kazukazu123123/pcsc-rs/commit/06e19e90dfa8ece72f6278cca72afd9a8bcd6185))
+* **deps:** update rust crate openssl to v0.10.59 ([#280](https://github.com/kazukazu123123/pcsc-rs/issues/280)) ([d507704](https://github.com/kazukazu123123/pcsc-rs/commit/d507704722251ff649842133c8351cf65d7337c0))
+* **deps:** update rust crate regex to v1.10.2 ([#263](https://github.com/kazukazu123123/pcsc-rs/issues/263)) ([e03a76d](https://github.com/kazukazu123123/pcsc-rs/commit/e03a76dd21496c6374490de70d93a2ac28c16e2f))
+* **deps:** update rust crate serde_json to v1.0.108 ([#277](https://github.com/kazukazu123123/pcsc-rs/issues/277)) ([260ee59](https://github.com/kazukazu123123/pcsc-rs/commit/260ee590f1452566079d63273d1493779fec8413))
+* **deps:** update serde monorepo to v1.0.190 ([#271](https://github.com/kazukazu123123/pcsc-rs/issues/271)) ([8db458a](https://github.com/kazukazu123123/pcsc-rs/commit/8db458a5881914d54ff3981a329c2ae98e30cdda))
+* **deps:** update serde monorepo to v1.0.192 ([#282](https://github.com/kazukazu123123/pcsc-rs/issues/282)) ([47ba177](https://github.com/kazukazu123123/pcsc-rs/commit/47ba1775db4d3965e3a3e630da0b5ce06f4a4b6f))
+
 ## [1.1.1](https://github.com/kazukazu123123/pcsc-rs/compare/v1.1.0...v1.1.1) (2023-10-16)
 
 
