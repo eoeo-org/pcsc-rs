@@ -944,9 +944,9 @@ dependencies = [
 
 [[package]]
 name = "rust_socketio"
-version = "0.4.3"
+version = "0.4.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "623355836137c602b50f987678bc5e1ded5cbcf8a7eb5a4a8e86aafbb66bd077"
+checksum = "48b3c9531f72da89c2eb9f54dcf79169d54e26b8c03438e395d0dd8e40167767"
 dependencies = [
  "adler32",
  "backoff",
