@@ -81,6 +81,8 @@ pub struct StatusDataWithPass {
     pub(crate) pass: String,
 }
 
+const VERSION: &'static str = env!("CARGO_PKG_VERSION");
+
 impl SystemStatus {
     pub fn get(sys: &mut System) -> Self {
         let cpu_name = sys.cpus()[0].brand().to_string();
@@ -134,7 +136,7 @@ impl SystemStatus {
 
         Self {
             _os: format!("{} {}", os_name.clone(), os_version.clone()),
-            version: "Rust".into(),
+            version: format!("Rust client v{}", VERSION.to_string()),
             hostname,
             cpu,
             ram,
