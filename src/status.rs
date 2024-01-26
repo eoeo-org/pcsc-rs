@@ -150,10 +150,6 @@ impl SystemStatus {
             })
             .collect();
 
-            for (interface_name, data) in &Networks::new_with_refreshed_list() {
-                println!("{interface_name}: {}/{} B", data.total_received(), data.total_transmitted());
-            }
-
         Self {
             _os: format!("{} {}", os_name.clone(), os_version.clone()),
             version: "Rust".into(),
