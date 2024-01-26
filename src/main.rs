@@ -98,6 +98,7 @@ fn start() {
 
     ClientBuilder::new(pcsc_uri)
         .namespace("/server")
+        .reconnect_on_disconnect(true)
         .on(Event::Connect, |_, _| println!("Connected"))
         .on(Event::Close, |_, _| println!("Disconnected"))
         .on("hi", |payload, socket| {
