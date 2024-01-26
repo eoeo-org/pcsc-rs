@@ -3,7 +3,7 @@ use std::env;
 use cfg_if::cfg_if;
 use serde::{Deserialize, Serialize};
 use sysinfo::{
-    Cpu, System, Disks
+    Cpu, System, Disks, Networks
 };
 
 use crate::{gpu, unix_to_date};
@@ -59,6 +59,13 @@ pub struct GpuData {
     pub(crate) memory: GpuMemory,
 }
 
+#[derive(Serialize, Deserialize, Clone, Debug)]
+pub struct NetWorkData {
+    pub(crate) name: String,
+    pub(crate) received: u64,
+    pub(crate) transmitted: u64,
+}
+
 #[derive(Serialize, Deserialize, Clone)]
 pub struct SystemStatus {
     pub(crate) _os: String,
@@ -72,6 +79,7 @@ pub struct SystemStatus {
     pub(crate) load_average: Option<[f64; 3]>,
     pub(crate) uptime: String,
     pub(crate) gpu: Option<GpuData>,
+    pub(crate) networks: Vec<NetWorkData>,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -132,6 +140,20 @@ impl SystemStatus {
 
         let gpu = gpu::get_info();
 
+        Networks::new_with_refreshed_list().refresh_list();
+        let networks: Vec<NetWorkData> = Networks::new_with_refreshed_list()
+            .iter()
+            .map(|(interface_name, network)| NetWorkData {
+                name: interface_name.to_string(),
+                received: network.total_received(),
+                transmitted: network.total_transmitted(),
+            })
+            .collect();
+
+            for (interface_name, data) in &Networks::new_with_refreshed_list() {
+                println!("{interface_name}: {}/{} B", data.total_received(), data.total_transmitted());
+            }
+
         Self {
             _os: format!("{} {}", os_name.clone(), os_version.clone()),
             version: "Rust".into(),
@@ -143,6 +165,7 @@ impl SystemStatus {
             uptime,
             storages,
             gpu,
+            networks,
         }
     }
 
