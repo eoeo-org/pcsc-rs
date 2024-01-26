@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.1.3](https://github.com/j-eoeo/pcsc-rs/compare/v1.1.2...v1.1.3) (2024-01-26)
+
+
+### Bug Fixes
+
+* **deps:** update rust crate openssl to v0.10.60 ([#299](https://github.com/j-eoeo/pcsc-rs/issues/299)) ([d50f6f6](https://github.com/j-eoeo/pcsc-rs/commit/d50f6f69ba4ea930e80c930db339785d59383c3d))
+* **deps:** update rust crate openssl to v0.10.61 ([#312](https://github.com/j-eoeo/pcsc-rs/issues/312)) ([bb0b2f9](https://github.com/j-eoeo/pcsc-rs/commit/bb0b2f94647b1fa091e6005a7cd152cb33dc9a02))
+* **deps:** update rust crate openssl to v0.10.62 ([#331](https://github.com/j-eoeo/pcsc-rs/issues/331)) ([85e802d](https://github.com/j-eoeo/pcsc-rs/commit/85e802d1f2d8aed74cf396373fd43bae6c73e96b))
+* **deps:** update rust crate openssl to v0.10.63 ([#365](https://github.com/j-eoeo/pcsc-rs/issues/365)) ([9cda417](https://github.com/j-eoeo/pcsc-rs/commit/9cda417afbeeb46d0e8a1652e649763b58cdc04b))
+* **deps:** update rust crate regex to v1.10.3 ([#368](https://github.com/j-eoeo/pcsc-rs/issues/368)) ([95ac252](https://github.com/j-eoeo/pcsc-rs/commit/95ac25243f7dd9e45a66a0fb571f32d2d016cbdf))
+* **deps:** update rust crate rust_socketio to v0.4.4 ([#292](https://github.com/j-eoeo/pcsc-rs/issues/292)) ([1387c39](https://github.com/j-eoeo/pcsc-rs/commit/1387c39b2b853e330de49e80b36a515d53e7915f))
+* **deps:** update rust crate serde_json to v1.0.109 ([#341](https://github.com/j-eoeo/pcsc-rs/issues/341)) ([2ce04cc](https://github.com/j-eoeo/pcsc-rs/commit/2ce04cc554432f50cba9231b6cb115458640f311))
+* **deps:** update rust crate serde_json to v1.0.110 ([#343](https://github.com/j-eoeo/pcsc-rs/issues/343)) ([9515b61](https://github.com/j-eoeo/pcsc-rs/commit/9515b61476287e8ff7baef2fb3f7f8685d2980dd))
+* **deps:** update rust crate serde_json to v1.0.111 ([#345](https://github.com/j-eoeo/pcsc-rs/issues/345)) ([c3efc60](https://github.com/j-eoeo/pcsc-rs/commit/c3efc60171dd0768a1fdfe0f0bca622a5e36b4b0))
+* **deps:** update rust crate sysinfo to v0.29.11 ([#301](https://github.com/j-eoeo/pcsc-rs/issues/301)) ([7977a8e](https://github.com/j-eoeo/pcsc-rs/commit/7977a8ebc66ef84593bd7ed75a23aa8f09cb01bf))
+* **deps:** update rust crate sysinfo to v0.30.5 ([#328](https://github.com/j-eoeo/pcsc-rs/issues/328)) ([3a5607b](https://github.com/j-eoeo/pcsc-rs/commit/3a5607bf3f1a5c65d8add731ee4d0c024c4c3517))
+* **deps:** update serde monorepo to v1.0.193 ([#298](https://github.com/j-eoeo/pcsc-rs/issues/298)) ([1a18376](https://github.com/j-eoeo/pcsc-rs/commit/1a18376cebab5a71aa6fc2d4f9ca1c2d1a9f115b))
+* **deps:** update serde monorepo to v1.0.194 ([#344](https://github.com/j-eoeo/pcsc-rs/issues/344)) ([1161a02](https://github.com/j-eoeo/pcsc-rs/commit/1161a024ab529041ce7e32a5206a030c8586a3ef))
+* **deps:** update serde monorepo to v1.0.195 ([#348](https://github.com/j-eoeo/pcsc-rs/issues/348)) ([325935c](https://github.com/j-eoeo/pcsc-rs/commit/325935c2c8db235680e7c0f1afb5ed35792d1185))
+
 ## [1.1.2](https://github.com/kazukazu123123/pcsc-rs/compare/v1.1.1...v1.1.2) (2023-11-12)
 
 
