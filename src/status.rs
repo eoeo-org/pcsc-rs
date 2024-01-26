@@ -2,7 +2,9 @@ use std::env;
 
 use cfg_if::cfg_if;
 use serde::{Deserialize, Serialize};
-use sysinfo::{Cpu, CpuExt, DiskExt, System, SystemExt};
+use sysinfo::{
+    Cpu, System, Disks
+};
 
 use crate::{gpu, unix_to_date};
 
@@ -82,19 +84,18 @@ pub struct StatusDataWithPass {
 impl SystemStatus {
     pub fn get(sys: &mut System) -> Self {
         let cpu_name = sys.cpus()[0].brand().to_string();
-        let os_name = sys.name().expect("Failed to get os name");
-        let os_version = sys
-            .os_version()
-            .or(sys.kernel_version())
+        let os_name = System::name().expect("Failed to get os name");
+        let os_version = System::os_version()
+            .or(System::kernel_version())
             .expect("Failed to get os version");
 
-        let hostname = env::var("HOSTNAME").unwrap_or_else(|_| sys.host_name().expect("Failed to get hostname"));
+        let hostname = env::var("HOSTNAME").unwrap_or_else(|_| System::host_name().expect("Failed to get hostname"));
 
         cfg_if! {
             if #[cfg(target_os = "windows")] {
                 let load_average = None;
             } else {
-                let load_average = sys.load_average();
+                let load_average = System::load_average();
                 let load_average = Some([load_average.one, load_average.five, load_average.fifteen]);
             }
         };
@@ -116,9 +117,9 @@ impl SystemStatus {
             total: sys.total_swap(),
         };
 
-        let uptime = unix_to_date::new(sys.uptime());
+        let uptime = unix_to_date::new(System::uptime());
 
-        let disks = sys.disks();
+        let disks = Disks::new_with_refreshed_list();
 
         let storages: Vec<StorageData> = disks
             .iter()
