@@ -24,7 +24,9 @@ use std::{
     thread,
     time::Duration, path::Path,
 };
-use sysinfo::{System, SystemExt};
+use sysinfo::{
+    System, IS_SUPPORTED_SYSTEM
+};
 
 use crate::status::SystemStatus;
 
@@ -66,7 +68,7 @@ fn main() {
         dotenv().expect(".env file not found");
     }
 
-    if !System::IS_SUPPORTED {
+    if !IS_SUPPORTED_SYSTEM {
         println!("This OS isn't supported (yet?).");
         process::exit(95);
     }
