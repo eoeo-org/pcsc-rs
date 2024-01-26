@@ -1,5 +1,5 @@
 use arc_swap::ArcSwap;
-use sysinfo::{System, SystemExt};
+use sysinfo::System;
 
 use std::{sync::Arc, thread, time::Duration};
 
