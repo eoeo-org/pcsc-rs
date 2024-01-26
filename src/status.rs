@@ -136,7 +136,7 @@ impl SystemStatus {
 
         Self {
             _os: format!("{} {}", os_name.clone(), os_version.clone()),
-            version: format!("Rust client v{}", VERSION.to_string()),
+            version: format!("Rust client v{}", VERSION),
             hostname,
             cpu,
             ram,
