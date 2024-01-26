@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.4](https://github.com/j-eoeo/pcsc-rs/compare/v1.1.3...v1.1.4) (2024-01-26)
+
+
+### Bug Fixes
+
+* Update version in SystemStatus struct ([#374](https://github.com/j-eoeo/pcsc-rs/issues/374)) ([efa4e60](https://github.com/j-eoeo/pcsc-rs/commit/efa4e6096e54dd749bd34377df0b07a16368669d))
+
 ## [1.1.3](https://github.com/j-eoeo/pcsc-rs/compare/v1.1.2...v1.1.3) (2024-01-26)
 
 
