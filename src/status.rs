@@ -95,7 +95,7 @@ impl SystemStatus {
             if #[cfg(target_os = "windows")] {
                 let load_average = None;
             } else {
-                let load_average = sys.load_average();
+                let load_average = System::load_average();
                 let load_average = Some([load_average.one, load_average.five, load_average.fifteen]);
             }
         };
