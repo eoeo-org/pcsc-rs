@@ -32,7 +32,7 @@ HOSTNAME=ホスト名として表示させたい文字列
 ## 対応環境
 
 最近の Windows (Server 含む), macOS, Linux であれば動作すると思います。\
-もし動作しない場合は [Issues](https://github.com/kazukazu123123/pcsc-rs/issues) から報告をお願いします。
+もし動作しない場合は [Issues](https://github.com/j-eoeo/pcsc-rs/issues) から報告をお願いします。
 
 ## 使い方
 
