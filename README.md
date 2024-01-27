@@ -57,7 +57,6 @@ Description=PCStatus Client
 After=network-online.target
 
 [Service]
-Environment="HOSTNAME=tty7.uk"
 Environment=PASS=npU7pmkkYfuUdKfqzm2BtDfBPEe4pizrXyPVj8Fby3KaUtehNu3ToDtM8uEdGBr3AS9LRUkZixtZxuKTvsL2e4BVrfzWWG7RqqVThLWsVLHLaJJ8ekeGuHtLBkfZpBtv
 ExecStart=/usr/local/bin/pcsc-rs
 
