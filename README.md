@@ -31,8 +31,8 @@ HOSTNAME=ホスト名として表示させたい文字列
 
 ## 対応環境
 
-最近の Windows (Server 含む), macOS, Linux であれば動作すると思います。
-もし動作しない場合は [Issues](https://github.com/kazukazu123123/pcsc-rs/issues) から報告をお願いします。
+最近の Windows (Server 含む), macOS, Linux であれば動作すると思います。\
+もし動作しない場合は [Issues](https://github.com/j-eoeo/pcsc-rs/issues) から報告をお願いします。
 
 ## 使い方
 
@@ -48,3 +48,22 @@ PASS=npU7pmkkYfuUdKfqzm2BtDfBPEe4pizrXyPVj8Fby3KaUtehNu3ToDtM8uEdGBr3AS9LRUkZixt
 4. [PC Status](https://pc-stats.eov2.com/)にアクセスし、自分の PC が表示されていれば完了です。
 
 必要に応じて `pcsc-rs.exe` のショートカットを `shell:startup` に追加すれば、PC と同時に起動するようになります。
+
+Linuxの場合、`sudo mv pcsc-rs-* /usr/local/bin/pcsc-rs`を実行し、Systemdに登録します。\
+`sudo <エディター> /etc/systemd/system/pcsc-rs.service`
+```
+[Unit]
+Description=PCStatus Client
+After=network-online.target
+
+[Service]
+Environment=PASS=npU7pmkkYfuUdKfqzm2BtDfBPEe4pizrXyPVj8Fby3KaUtehNu3ToDtM8uEdGBr3AS9LRUkZixtZxuKTvsL2e4BVrfzWWG7RqqVThLWsVLHLaJJ8ekeGuHtLBkfZpBtv
+ExecStart=/usr/local/bin/pcsc-rs
+
+[Install]
+WantedBy=network-online.target
+```
+```
+sudo systemctl daemon-reload
+sudo systemctl enable --now pcsc-rs
+```
