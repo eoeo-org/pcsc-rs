@@ -2,8 +2,8 @@
 
 PC の状態を取得し、[PC Status](https://pc-stats.eov2.com/)に送信、表示するツールです。
 
-![Preview - Overview](https://cdn.discordapp.com/attachments/916525261409898527/1070176168948539452/0UAAAAASUVORK5CYII.png)
-| ![Preview - Focus Windows](https://cdn.discordapp.com/attachments/1113337313787916349/1172992924917702696/image.png) | ![Preview - Focus Linux](https://cdn.discordapp.com/attachments/1113337313787916349/1172992925186134136/image.png) |
+![Preview - Overview](https://github.com/j-eoeo/pcsc-rs/assets/34514603/79496a8d-cea4-457e-b307-52cce7a55f33)
+| ![Preview - Focus to Windows](https://github.com/j-eoeo/pcsc-rs/assets/34514603/2cc271bc-c24e-4446-bffe-b6d7cb5c7fbd) | ![Preview - Focus to Linux](https://github.com/j-eoeo/pcsc-rs/assets/34514603/c7a28a39-f7d8-4d9f-bec9-3ac845a2037e) |
 |---|---|
 
 ## 注意
