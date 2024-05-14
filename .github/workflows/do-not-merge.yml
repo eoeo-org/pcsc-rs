@@ -7,7 +7,6 @@ on:
       - synchronize
       - labeled
       - unlabeled
-  pull_request_review:
 
 permissions:
   pull-requests: read
