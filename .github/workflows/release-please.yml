@@ -19,10 +19,18 @@ jobs:
       release_created: ${{ steps.release.outputs.release_created }}
       tag_name: ${{ steps.release.outputs.tag_name }}
     steps:
+      - name: Generate a token
+        id: generate_token
+        uses: actions/create-github-app-token@a0de6af83968303c8c955486bf9739a57d23c7f1 # v1.10.0
+        with:
+          app-id: ${{ vars.EOEO_RELEASE_APP_ID }}
+          private-key: ${{ secrets.EOEO_RELEASE_PRIVATE_KEY }}
       - uses: googleapis/release-please-action@a37ac6e4f6449ce8b3f7607e4d97d0146028dc0b # v4.1.0
         id: release
         with:
           release-type: rust
+          token: ${{ steps.generate_token.outputs.token }}
+
   build:
     needs: release-please
     if: ${{ needs.release-please.outputs.release_created }}
