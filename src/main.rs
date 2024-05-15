@@ -103,15 +103,17 @@ fn start() {
         .on(Event::Close, |_, _| println!("Disconnected"))
         .on("hi", |payload, socket| {
             match payload {
-                Payload::String(str) => println!("Received: {}", str),
+                Payload::Text(values) => println!("Received: {}", values[0]),
                 Payload::Binary(bin_data) => println!("Received bytes: {:#?}", bin_data),
+                _ => (),
             };
             init(socket);
         })
         .on("sync", move |payload, socket| {
             match payload {
-                Payload::String(str) => println!("Received: {}", str),
+                Payload::Text(values) => println!("Received: {}", values[0]),
                 Payload::Binary(bin_data) => println!("Received bytes: {:#?}", bin_data),
+                _ => (),
             };
 
             let status = shared_data.load();
@@ -123,8 +125,9 @@ fn start() {
             event_app.lock().unwrap().on_message(payload, client)
         })
         .on(Event::Error, |err, _| match err {
-            Payload::String(str) => eprintln!("Error: {}", str),
+            Payload::Text(values) => eprintln!("Error: {}", values[0]),
             Payload::Binary(bin_data) => eprintln!("Error: {:#?}", bin_data),
+            _ => (),
         })
         .connect()
         .expect("Connection failed");
