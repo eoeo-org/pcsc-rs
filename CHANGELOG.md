@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.1.5](https://github.com/j-eoeo/pcsc-rs/compare/v1.1.4...v1.1.5) (2024-05-16)
+
+
+### Bug Fixes
+
+* **deps:** update rust crate arc-swap to v1.7.1 ([#390](https://github.com/j-eoeo/pcsc-rs/issues/390)) ([4136819](https://github.com/j-eoeo/pcsc-rs/commit/41368195ff4239f04ee530c33a1b6b07895afac8))
+* **deps:** update rust crate openssl to v0.10.64 ([#386](https://github.com/j-eoeo/pcsc-rs/issues/386)) ([309fd6d](https://github.com/j-eoeo/pcsc-rs/commit/309fd6d2a9653365213277f6717ee70dc1a918ca))
+* **deps:** update rust crate regex to v1.10.4 ([#387](https://github.com/j-eoeo/pcsc-rs/issues/387)) ([fd27bf3](https://github.com/j-eoeo/pcsc-rs/commit/fd27bf34b7b0be9adaca068acdc701f3777435d8))
+* **deps:** update rust crate rust_socketio to v0.6.0 ([#391](https://github.com/j-eoeo/pcsc-rs/issues/391)) ([0acb7bd](https://github.com/j-eoeo/pcsc-rs/commit/0acb7bd686312aa7d55b06900347df39cad6f705))
+* **deps:** update rust crate serde_json to v1.0.113 ([#377](https://github.com/j-eoeo/pcsc-rs/issues/377)) ([36deae6](https://github.com/j-eoeo/pcsc-rs/commit/36deae6293886db9280d1e3b0e5b8792d81e5807))
+* **deps:** update rust crate serde_json to v1.0.117 ([#388](https://github.com/j-eoeo/pcsc-rs/issues/388)) ([43f20fc](https://github.com/j-eoeo/pcsc-rs/commit/43f20fc4f3d727162f7290c99d79516d4540ad7e))
+* **deps:** update rust crate sysinfo to v0.30.12 ([#389](https://github.com/j-eoeo/pcsc-rs/issues/389)) ([d0da6c4](https://github.com/j-eoeo/pcsc-rs/commit/d0da6c4f27b13f9db962d1f5db3c0ef486435f2e))
+* **deps:** update serde monorepo to v1.0.201 ([#378](https://github.com/j-eoeo/pcsc-rs/issues/378)) ([28c4317](https://github.com/j-eoeo/pcsc-rs/commit/28c4317884bf83d3d02ae74a22e006fcee8559e6))
+* **deps:** update serde monorepo to v1.0.202 ([#394](https://github.com/j-eoeo/pcsc-rs/issues/394)) ([1545980](https://github.com/j-eoeo/pcsc-rs/commit/1545980cbd0a83c60a636d3e0871b616306aceab))
+* update readme preview screenshots and ALT ([#382](https://github.com/j-eoeo/pcsc-rs/issues/382)) ([db47aba](https://github.com/j-eoeo/pcsc-rs/commit/db47aba14164b7de8cffa1e5c66faf9ad984e2a2))
+
 ## [1.1.4](https://github.com/j-eoeo/pcsc-rs/compare/v1.1.3...v1.1.4) (2024-01-26)
 
 
