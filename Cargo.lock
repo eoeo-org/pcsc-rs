@@ -745,7 +745,7 @@ dependencies = [
 
 [[package]]
 name = "pcsc-rs"
-version = "1.1.5"
+version = "1.1.6"
 dependencies = [
  "arc-swap",
  "cfg-if",
@@ -1131,9 +1131,9 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.119"
+version = "1.0.117"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e8eddb61f0697cc3989c5d64b452f5488e2b8a60fd7d5076a3045076ffef8cb0"
+checksum = "455182ea6142b14f93f4bc5320a2b31c1f266b66a4a5c858b013302a5d8cbfc3"
 dependencies = [
  "itoa",
  "ryu",
