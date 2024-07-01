@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.1.6](https://github.com/j-eoeo/pcsc-rs/compare/v1.1.5...v1.1.6) (2024-07-01)
+
+
+### Bug Fixes
+
+* **deps:** update rust crate regex to v1.10.5 ([#404](https://github.com/j-eoeo/pcsc-rs/issues/404)) ([d33e5bf](https://github.com/j-eoeo/pcsc-rs/commit/d33e5bff4dd64344eb00d27b4bcb7ff29119f413))
+* **deps:** update rust crate serde_json to v1.0.119 ([#408](https://github.com/j-eoeo/pcsc-rs/issues/408)) ([424cc8f](https://github.com/j-eoeo/pcsc-rs/commit/424cc8fe8ac78c39b3cc2cb6928333019c4e7190))
+* **deps:** update serde monorepo to v1.0.203 ([#399](https://github.com/j-eoeo/pcsc-rs/issues/399)) ([7e941da](https://github.com/j-eoeo/pcsc-rs/commit/7e941da8e9c33b92c5dc85d9dcf6456ca699b6ff))
+
 ## [1.1.5](https://github.com/j-eoeo/pcsc-rs/compare/v1.1.4...v1.1.5) (2024-05-16)
 
 
