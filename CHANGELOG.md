@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.1.7](https://github.com/eoeo-org/pcsc-rs/compare/v1.1.6...v1.1.7) (2024-07-21)
+
+
+### Bug Fixes
+
+* **deps:** update rust crate openssl to v0.10.65 ([#422](https://github.com/eoeo-org/pcsc-rs/issues/422)) ([7734061](https://github.com/eoeo-org/pcsc-rs/commit/77340610fc3c68ff0da1315fbdc1911eed1f8a7a))
+* **deps:** update rust crate serde_json to v1.0.120 ([#412](https://github.com/eoeo-org/pcsc-rs/issues/412)) ([5d68b6f](https://github.com/eoeo-org/pcsc-rs/commit/5d68b6f4b461f240506a13432fb0cd69a493a003))
+* **deps:** update rust crate sysinfo to v0.30.13 ([#418](https://github.com/eoeo-org/pcsc-rs/issues/418)) ([9294466](https://github.com/eoeo-org/pcsc-rs/commit/929446607067e384abace212e0aca3b0f9717664))
+* **deps:** update serde monorepo to v1.0.204 ([#420](https://github.com/eoeo-org/pcsc-rs/issues/420)) ([83d20fb](https://github.com/eoeo-org/pcsc-rs/commit/83d20fb294b87646b214be78faa505c322dbd713))
+
 ## [1.1.6](https://github.com/j-eoeo/pcsc-rs/compare/v1.1.5...v1.1.6) (2024-07-01)
 
 
