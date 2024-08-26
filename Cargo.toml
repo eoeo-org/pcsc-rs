@@ -20,4 +20,4 @@ sysinfo = "=0.30.13"
 winres = "=0.1.12"
 
 [target.'cfg(not(any(target_os = "windows", target_os = "macos", target_os = "ios")))'.dependencies]
-openssl = { version = "=0.10.65", features = ["vendored"] }
+openssl = { version = "=0.10.66", features = ["vendored"] }
