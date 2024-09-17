@@ -11,8 +11,8 @@ cfg-if = "=1.0.0"
 dotenvy = "=0.15.7"
 regex = "=1.10.6"
 rust_socketio = "=0.6.0"
-serde = { version = "=1.0.209", features = ["derive"] }
-serde_derive = "=1.0.209"
+serde = { version = "=1.0.210", features = ["derive"] }
+serde_derive = "=1.0.210"
 serde_json = "=1.0.127"
 sysinfo = "=0.31.3"
 
