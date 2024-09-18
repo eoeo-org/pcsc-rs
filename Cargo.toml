@@ -21,3 +21,8 @@ winres = "=0.1.12"
 
 [target.'cfg(not(any(target_os = "windows", target_os = "macos", target_os = "ios")))'.dependencies]
 openssl = { version = "=0.10.66", features = ["vendored"] }
+
+[profile.release]
+strip = "symbols"
+lto = "fat"
+codegen-units = 1
