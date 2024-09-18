@@ -2,9 +2,7 @@ use std::env;
 
 use cfg_if::cfg_if;
 use serde::{Deserialize, Serialize};
-use sysinfo::{
-    Cpu, System, Disks
-};
+use sysinfo::{Cpu, Disks, System};
 
 use crate::{gpu, unix_to_date};
 
@@ -91,7 +89,8 @@ impl SystemStatus {
             .or(System::kernel_version())
             .expect("Failed to get os version");
 
-        let hostname = env::var("HOSTNAME").unwrap_or_else(|_| System::host_name().expect("Failed to get hostname"));
+        let hostname = env::var("HOSTNAME")
+            .unwrap_or_else(|_| System::host_name().expect("Failed to get hostname"));
 
         cfg_if! {
             if #[cfg(target_os = "windows")] {
