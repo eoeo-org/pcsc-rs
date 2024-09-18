@@ -81,7 +81,7 @@ pub struct StatusDataWithPass {
     pub(crate) pass: String,
 }
 
-const VERSION: &'static str = env!("CARGO_PKG_VERSION");
+const GIT_DESCRIBE: &'static str = env!("GIT_DESCRIBE");
 
 impl SystemStatus {
     pub fn get(sys: &mut System) -> Self {
@@ -136,7 +136,7 @@ impl SystemStatus {
 
         Self {
             _os: format!("{} {}", os_name.clone(), os_version.clone()),
-            version: format!("Rust client v{}", VERSION),
+            version: format!("Rust client {}", GIT_DESCRIBE),
             hostname,
             cpu,
             ram,

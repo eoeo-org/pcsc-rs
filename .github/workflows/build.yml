@@ -45,6 +45,9 @@ jobs:
         run: |
           sudo apt-get install -y musl-tools --no-install-recommends
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+        with:
+          filter: tree:0
+          fetch-depth: 0
       - uses: dtolnay/rust-toolchain@stable
         with:
           target: ${{ matrix.target }}
