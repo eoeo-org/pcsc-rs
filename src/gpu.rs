@@ -1,27 +1,26 @@
-use regex::Regex;
 use cfg_if::cfg_if;
+use regex::Regex;
 
 use crate::status::{GpuData, GpuMemory};
-use std::process::Command;
 #[cfg(target_os = "windows")]
 use std::os::windows::process::CommandExt;
+use std::process::Command;
 
 #[cfg(target_os = "windows")]
 const CREATE_NO_WINDOW: u32 = 0x08000000;
 
 pub fn get_info() -> Option<GpuData> {
     let mut binding = Command::new("nvidia-smi");
-    let command = binding
-        .args([
-            "--format=csv",
-            "--query-gpu=name,utilization.gpu,memory.free,memory.total",
-        ]);
+    let command = binding.args([
+        "--format=csv",
+        "--query-gpu=name,utilization.gpu,memory.free,memory.total",
+    ]);
 
-        cfg_if! {
-            if #[cfg(target_os = "windows")] {
-                command.creation_flags(CREATE_NO_WINDOW);
-            }
-        };
+    cfg_if! {
+        if #[cfg(target_os = "windows")] {
+            command.creation_flags(CREATE_NO_WINDOW);
+        }
+    };
 
     let output = command.output();
     if output.is_err() {

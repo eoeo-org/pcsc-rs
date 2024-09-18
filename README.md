@@ -2,8 +2,8 @@
 
 PC の状態を取得し、[PC Status](https://pc-stats.eov2.com/)に送信、表示するツールです。
 
-![Preview - Overview](https://github.com/j-eoeo/pcsc-rs/assets/34514603/79496a8d-cea4-457e-b307-52cce7a55f33)
-| ![Preview - Focus to Windows](https://github.com/j-eoeo/pcsc-rs/assets/34514603/2cc271bc-c24e-4446-bffe-b6d7cb5c7fbd) | ![Preview - Focus to Linux](https://github.com/j-eoeo/pcsc-rs/assets/34514603/c7a28a39-f7d8-4d9f-bec9-3ac845a2037e) |
+![Preview - Overview](https://github.com/eoeo-org/pcsc-rs/assets/34514603/79496a8d-cea4-457e-b307-52cce7a55f33)
+| ![Preview - Focus to Windows](https://github.com/eoeo-org/pcsc-rs/assets/34514603/2cc271bc-c24e-4446-bffe-b6d7cb5c7fbd) | ![Preview - Focus to Linux](https://github.com/eoeo-org/pcsc-rs/assets/34514603/c7a28a39-f7d8-4d9f-bec9-3ac845a2037e) |
 |---|---|
 
 ## 注意
@@ -32,11 +32,11 @@ HOSTNAME=ホスト名として表示させたい文字列
 ## 対応環境
 
 最近の Windows (Server 含む), macOS, Linux であれば動作すると思います。\
-もし動作しない場合は [Issues](https://github.com/j-eoeo/pcsc-rs/issues) から報告をお願いします。
+もし動作しない場合は [Issues](https://github.com/eoeo-org/pcsc-rs/issues) から報告をお願いします。
 
 ## 使い方
 
-1. [リリースページ](https://github.com/kazukazu123123/pcsc-rs/releases)から使用する環境に合った最新のリリースをダウンロードしてください。
+1. [リリースページ](https://github.com/eoeo-org/pcsc-rs/releases)から使用する環境に合った最新のリリースをダウンロードしてください。
 2. 適当なフォルダに保存し、同じフォルダに `.env` ファイルを作成して以下の Key を追加してください。
 
 ```env
@@ -63,7 +63,7 @@ ExecStart=/usr/local/bin/pcsc-rs
 [Install]
 WantedBy=network-online.target
 ```
-```
+```sh
 sudo systemctl daemon-reload
 sudo systemctl enable --now pcsc-rs
 ```
