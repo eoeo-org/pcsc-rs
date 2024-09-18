@@ -19,14 +19,14 @@ use rust_socketio::{ClientBuilder, Event, Payload, RawClient};
 use serde_derive::{Deserialize, Serialize};
 use serde_json::json;
 use std::{
-    env, hint, process,
+    env, hint,
+    path::Path,
+    process,
     sync::{Arc, Mutex},
     thread,
-    time::Duration, path::Path,
+    time::Duration,
 };
-use sysinfo::{
-    System, IS_SUPPORTED_SYSTEM
-};
+use sysinfo::{System, IS_SUPPORTED_SYSTEM};
 
 use crate::status::SystemStatus;
 
