@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.10](https://github.com/eoeo-org/pcsc-rs/compare/v1.1.9...v1.1.10) (2024-09-18)
+
+
+### Build System
+
+* update release profile ([#442](https://github.com/eoeo-org/pcsc-rs/issues/442)) ([1caf21c](https://github.com/eoeo-org/pcsc-rs/commit/1caf21c4021b4e3fad4dc49264a195a1e18d8220))
+
 ## [1.1.9](https://github.com/eoeo-org/pcsc-rs/compare/v1.1.8...v1.1.9) (2024-09-18)
 
 
