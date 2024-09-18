@@ -1,0 +1,19 @@
+name: check rustfmt
+
+on:
+  push:
+    branches: ["**"]
+
+permissions: {}
+
+jobs:
+  rustfmt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - uses: dtolnay/rust-toolchain@7b1c307e0dcbda6122208f10795a713336a9b35a # master
+        with:
+          toolchain: stable
+          components: rustfmt
+      - name: Run rustfmt
+        run: cargo fmt --all --check -- --color=always
