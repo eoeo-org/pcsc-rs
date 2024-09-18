@@ -17,22 +17,32 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [aarch64-unknown-linux-gnu, aarch64-unknown-linux-musl]
-        use-cross: [true]
-        include:
+        platform:
+          - target: aarch64-unknown-linux-gnu
+            os: ubuntu-22.04
+            command: cross
+          - target: aarch64-unknown-linux-musl
+            os: ubuntu-22.04
+            command: cross
           - target: x86_64-unknown-linux-gnu
-            use-cross: false
+            os: ubuntu-22.04
+            command: cargo
           - target: x86_64-unknown-linux-musl
-            use-cross: false
-          - os: macos-14
-            target: aarch64-apple-darwin
-          - os: macos-14
-            target: x86_64-apple-darwin
-          - os: windows-2022
-            target: x86_64-pc-windows-msvc
-          - os: windows-2022
-            target: x86_64-pc-windows-gnu
-    runs-on: ${{ matrix.os || 'ubuntu-22.04'}}
+            os: ubuntu-22.04
+            command: cargo
+          - target: aarch64-apple-darwin
+            os: macos-14
+            command: cargo
+          - target: x86_64-apple-darwin
+            os: macos-14
+            command: cargo
+          - target: x86_64-pc-windows-msvc
+            os: windows-2022
+            command: cargo
+          - target: x86_64-pc-windows-gnu
+            os: windows-2022
+            command: cargo
+    runs-on: ${{ matrix.platform.os }}
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GH_REPO: ${{ github.repository }}
@@ -41,7 +51,7 @@ jobs:
         shell: bash -xe {0}
     steps:
       - name: Install musl tools
-        if: matrix.target == 'x86_64-unknown-linux-musl'
+        if: matrix.platform.target == 'x86_64-unknown-linux-musl'
         run: |
           sudo apt-get install -y musl-tools --no-install-recommends
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
@@ -50,32 +60,32 @@ jobs:
           fetch-depth: 0
       - uses: dtolnay/rust-toolchain@stable
         with:
-          target: ${{ matrix.target }}
+          target: ${{ matrix.platform.target }}
       - uses: Swatinem/rust-cache@23bce251a8cd2ffc3c1075eaa2367cf899916d84 # v2.7.3
         with:
-          key: ${{ matrix.target }}
+          key: ${{ matrix.platform.target }}
       - name: Install cross
-        if: ${{ !matrix.os && matrix.use-cross }}
+        if: ${{ matrix.platform.command == 'cross' }}
         uses: taiki-e/install-action@af6bbc3b8feaa3c53f42fa204f010ff6b43134b3 # v2.44.2
         with:
           tool: cross
-      - run: ${{ (!matrix.os && matrix.use-cross) && 'cross' || 'cargo' }} build --locked --release --target ${{ matrix.target }}
+      - run: ${{ matrix.platform.command }} build --locked --release --target ${{ matrix.platform.target }}
       - uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
         with:
-          name: ${{ matrix.target }}
+          name: ${{ matrix.platform.target }}
           path: |
-            target/${{ matrix.target }}/release/pcsc-rs
-            target/${{ matrix.target }}/release/pcsc-rs.exe
+            target/${{ matrix.platform.target }}/release/pcsc-rs
+            target/${{ matrix.platform.target }}/release/pcsc-rs.exe
       - name: Upload to release
         if: ${{ inputs.tag-name }}
-        working-directory: target/${{ matrix.target }}/release/
+        working-directory: target/${{ matrix.platform.target }}/release/
         run: |
           if [ -e pcsc-rs.exe ]; then
-            filename="pcsc-rs-${{ inputs.tag-name }}-${{ matrix.target }}.exe"
+            filename="pcsc-rs-${{ inputs.tag-name }}-${{ matrix.platform.target }}.exe"
             mv pcsc-rs.exe "$filename"
-            gh release upload ${{ inputs.tag-name }} "$filename"#${{ matrix.target }} --clobber
+            gh release upload ${{ inputs.tag-name }} "$filename"#${{ matrix.platform.target }} --clobber
           else
-            filename="pcsc-rs-${{ inputs.tag-name }}-${{ matrix.target }}"
+            filename="pcsc-rs-${{ inputs.tag-name }}-${{ matrix.platform.target }}"
             mv pcsc-rs "$filename"
-            gh release upload ${{ inputs.tag-name }} "$filename"#${{ matrix.target }} --clobber
+            gh release upload ${{ inputs.tag-name }} "$filename"#${{ matrix.platform.target }} --clobber
           fi
