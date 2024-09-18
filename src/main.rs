@@ -21,7 +21,7 @@ use serde_derive::{Deserialize, Serialize};
 use serde_json::json;
 use std::{
     env, hint,
-    path::Path,
+    path::{Path, PathBuf},
     process::{self, exit, Command},
     sync::{Arc, Mutex},
     thread,
@@ -63,28 +63,33 @@ impl ::std::default::Default for AppConfig {
     }
 }
 
-fn restart_program() {
-    let current_exe = env::current_exe().expect("Failed to get current executable path");
-
-    Command::new(current_exe)
+fn restart_program(bin_install_path: PathBuf) {
+    Command::new(bin_install_path)
         .spawn()
         .expect("Failed to restart the program");
 
     exit(0);
 }
 
-fn update() -> Result<self_update::Status, Box<dyn (::std::error::Error)>> {
-    let status = self_update::backends::github::Update::configure()
+fn update() -> Result<(), Box<dyn (::std::error::Error)>> {
+    let config = self_update::backends::github::Update::configure()
         .repo_owner("eoeo-org")
         .repo_name("pcsc-rs")
         .bin_name("pcsc-rs")
         .show_download_progress(true)
         .current_version(cargo_crate_version!())
         .no_confirm(true)
-        .build()?
-        .update()?;
+        .build()?;
 
-    Ok(status)
+    let bin_install_path = config.bin_install_path();
+
+    let status = config.update()?;
+
+    if status.updated() {
+        restart_program(bin_install_path);
+    }
+
+    Ok(())
 }
 
 fn main() {
@@ -107,10 +112,7 @@ fn main() {
 }
 
 fn start() {
-    let update_result = update();
-    if update_result.is_ok() {
-        restart_program();
-    }
+    let _ = update();
 
     let mut system = System::new_all();
 
