@@ -63,7 +63,7 @@ ExecStart=/usr/local/bin/pcsc-rs
 [Install]
 WantedBy=network-online.target
 ```
-```
+```sh
 sudo systemctl daemon-reload
 sudo systemctl enable --now pcsc-rs
 ```
