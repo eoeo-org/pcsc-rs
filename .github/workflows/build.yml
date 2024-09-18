@@ -76,6 +76,7 @@ jobs:
           path: |
             target/${{ matrix.platform.target }}/release/pcsc-rs
             target/${{ matrix.platform.target }}/release/pcsc-rs.exe
+          if-no-files-found: error
       - name: Upload to release
         if: ${{ inputs.tag-name }}
         working-directory: target/${{ matrix.platform.target }}/release/
