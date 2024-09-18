@@ -1,6 +1,7 @@
 use git2::{DescribeFormatOptions, DescribeOptions, Error, Repository};
 use std::io;
-#[cfg(windows)] use winres::WindowsResource;
+#[cfg(windows)]
+use winres::WindowsResource;
 
 fn main() -> io::Result<()> {
     match get_git_describe_result() {
@@ -8,7 +9,8 @@ fn main() -> io::Result<()> {
         Err(e) => println!("cargo::warning={}", e),
     }
 
-    #[cfg(windows)] {
+    #[cfg(windows)]
+    {
         WindowsResource::new()
             .set_icon("assets/icon.ico")
             .compile()?;
