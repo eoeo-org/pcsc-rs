@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.1.9](https://github.com/eoeo-org/pcsc-rs/compare/v1.1.8...v1.1.9) (2024-09-18)
+
+
+### Bug Fixes
+
+* **deps:** update rust crate serde_json to v1.0.128 ([#437](https://github.com/eoeo-org/pcsc-rs/issues/437)) ([d0e6f4d](https://github.com/eoeo-org/pcsc-rs/commit/d0e6f4d7992d04e9eb0e5dd6f5ef1ece87ff06f6))
+* **deps:** update rust crate sysinfo to v0.31.4 ([#435](https://github.com/eoeo-org/pcsc-rs/issues/435)) ([11b616f](https://github.com/eoeo-org/pcsc-rs/commit/11b616fd396938d7ba88b41ab93abf14d0cec8d3))
+* **deps:** update serde monorepo to v1.0.210 ([#438](https://github.com/eoeo-org/pcsc-rs/issues/438)) ([c4caf75](https://github.com/eoeo-org/pcsc-rs/commit/c4caf7563d47e8fa52430868ebfb580e77d63702))
+
 ## [1.1.8](https://github.com/eoeo-org/pcsc-rs/compare/v1.1.7...v1.1.8) (2024-08-26)
 
 
