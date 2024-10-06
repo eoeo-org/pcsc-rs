@@ -9,12 +9,12 @@ edition = "2021"
 arc-swap = "=1.7.1"
 cfg-if = "=1.0.0"
 dotenvy = "=0.15.7"
-regex = "=1.10.6"
+regex = "=1.11.0"
 rust_socketio = "=0.6.0"
 serde = { version = "=1.0.210", features = ["derive"] }
 serde_derive = "=1.0.210"
 serde_json = "=1.0.128"
-sysinfo = "=0.31.4"
+sysinfo = "=0.32.0"
 self_update = "0.41.0"
 
 [build-dependencies]
