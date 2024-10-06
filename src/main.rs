@@ -21,8 +21,8 @@ use serde_derive::{Deserialize, Serialize};
 use serde_json::json;
 use std::{
     env, hint,
-    path::{Path, PathBuf},
-    process::{self, exit, Command},
+    path::Path,
+    process::{self},
     sync::{Arc, Mutex},
     thread,
     time::Duration,
@@ -63,14 +63,6 @@ impl ::std::default::Default for AppConfig {
     }
 }
 
-fn restart_program(bin_install_path: PathBuf) {
-    Command::new(bin_install_path)
-        .spawn()
-        .expect("Failed to restart the program");
-
-    exit(0);
-}
-
 fn update() -> Result<(), Box<dyn (::std::error::Error)>> {
     let config = self_update::backends::github::Update::configure()
         .repo_owner("eoeo-org")
@@ -81,13 +73,7 @@ fn update() -> Result<(), Box<dyn (::std::error::Error)>> {
         .no_confirm(true)
         .build()?;
 
-    let bin_install_path = config.bin_install_path();
-
-    let status = config.update()?;
-
-    if status.updated() {
-        restart_program(bin_install_path);
-    }
+    config.update()?;
 
     Ok(())
 }
