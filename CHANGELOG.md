@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.2.0](https://github.com/eoeo-org/pcsc-rs/compare/v1.1.10...v1.2.0) (2024-10-06)
+
+
+### Features
+
+* add self updator ([#453](https://github.com/eoeo-org/pcsc-rs/issues/453)) ([9d0c686](https://github.com/eoeo-org/pcsc-rs/commit/9d0c686af8c8f84a04712537abea3f9bb61e672a))
+* display git describe version ([#445](https://github.com/eoeo-org/pcsc-rs/issues/445)) ([fbf9a7c](https://github.com/eoeo-org/pcsc-rs/commit/fbf9a7cecf8b26fee7f456500cfc0254feff9e5e))
+
+
+### Bug Fixes
+
+* **deps:** pin rust crate self_update to =0.41.0 ([#464](https://github.com/eoeo-org/pcsc-rs/issues/464)) ([7fd1784](https://github.com/eoeo-org/pcsc-rs/commit/7fd1784bc76342b99c8f3610e935374ec33c5a70))
+* **deps:** update rust crate regex to v1.11.0 ([#459](https://github.com/eoeo-org/pcsc-rs/issues/459)) ([457cd4d](https://github.com/eoeo-org/pcsc-rs/commit/457cd4d08bda037fa3916ddbc433481a4d186523))
+* **deps:** update rust crate sysinfo to v0.32.0 ([#462](https://github.com/eoeo-org/pcsc-rs/issues/462)) ([009c29e](https://github.com/eoeo-org/pcsc-rs/commit/009c29e294db87af50d8924556f034b248176f6a))
+
 ## [1.1.10](https://github.com/eoeo-org/pcsc-rs/compare/v1.1.9...v1.1.10) (2024-09-18)
 
 
