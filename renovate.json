@@ -23,7 +23,15 @@
   "packageRules": [
     {
       "matchDepTypes": ["dependencies", "require"],
-      "labels": ["dependencies", "semver:patch"]
+      "labels": ["dependencies", "semver:patch"],
+      "semanticCommitType": "deps",
+      "semanticCommitScope": null
+    },
+    {
+      "matchUpdateTypes": ["lockFileMaintenance"],
+      "labels": ["dependencies", "semver:patch"],
+      "semanticCommitType": "deps",
+      "semanticCommitScope": null
     }
   ]
 }
