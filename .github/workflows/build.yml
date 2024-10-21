@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - 'main'
+      - 'test'
   pull_request:
   workflow_call:
     inputs:
@@ -17,7 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        profile: ${{ github.ref_name == github.event.repository.default_branch && fromJson('["dev", "release"]') || fromJson('["dev"]') }}
+        profile: ["release"]
         platform:
           - target: aarch64-unknown-linux-gnu
             os: ubuntu-22.04
@@ -70,7 +71,7 @@ jobs:
         uses: taiki-e/install-action@a3df29458daa5c62abace1e6b358018bed57d5b4 # v2.44.43
         with:
           tool: cross
-      - run: ${{ matrix.platform.command }} build --locked ${{ matrix.profile == 'release' && '--release' || '' }} --target ${{ matrix.platform.target }}
+      - run: ${{ matrix.platform.command }} rustc --locked ${{ matrix.profile == 'release' && '--release' || '' }} --target ${{ matrix.platform.target }} ${{ startsWith(matrix.platform.target,'x86_64') && '-- -C target-cpu=x86-64-v4' || '' }}
       - uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
         with:
           name: ${{ matrix.profile }}-${{ matrix.platform.target }}
