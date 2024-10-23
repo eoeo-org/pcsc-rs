@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.2.1](https://github.com/eoeo-org/pcsc-rs/compare/v1.2.0...v1.2.1) (2024-10-23)
+
+
+### Dependencies
+
+* lock file maintenance ([#467](https://github.com/eoeo-org/pcsc-rs/issues/467)) ([4b796ee](https://github.com/eoeo-org/pcsc-rs/commit/4b796ee6ca015e9365d7012b1020c81a39cb4977))
+* lock file maintenance ([#477](https://github.com/eoeo-org/pcsc-rs/issues/477)) ([cc96c8f](https://github.com/eoeo-org/pcsc-rs/commit/cc96c8fe0757282a5754334382091d1f514bd3b3))
+* update rust crate openssl to v0.10.67 ([#472](https://github.com/eoeo-org/pcsc-rs/issues/472)) ([1037b75](https://github.com/eoeo-org/pcsc-rs/commit/1037b7580eb18dd3ad777a388655c8fa80eb71db))
+* update rust crate openssl to v0.10.68 ([#474](https://github.com/eoeo-org/pcsc-rs/issues/474)) ([d4f27e6](https://github.com/eoeo-org/pcsc-rs/commit/d4f27e65a0c4a2c28fc91a34b116a588f8640d90))
+* update rust crate serde_json to v1.0.132 ([#475](https://github.com/eoeo-org/pcsc-rs/issues/475)) ([820092c](https://github.com/eoeo-org/pcsc-rs/commit/820092c870fa7fd1d6827b83e1080b58c1c69adb))
+* update serde monorepo to v1.0.211 ([#479](https://github.com/eoeo-org/pcsc-rs/issues/479)) ([30d6539](https://github.com/eoeo-org/pcsc-rs/commit/30d6539d43529c4f1e90c61891c020ba6fa66423))
+* update serde monorepo to v1.0.213 ([#483](https://github.com/eoeo-org/pcsc-rs/issues/483)) ([49eadb9](https://github.com/eoeo-org/pcsc-rs/commit/49eadb97cacafdf1a186e608a4330808bf3f8fac))
+
 ## [1.2.0](https://github.com/eoeo-org/pcsc-rs/compare/v1.1.10...v1.2.0) (2024-10-06)
 
 
