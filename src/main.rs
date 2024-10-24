@@ -16,13 +16,12 @@ mod unix_to_date;
 use arc_swap::ArcSwap;
 use dotenvy::dotenv;
 use rust_socketio::{ClientBuilder, Event, Payload, RawClient};
-use self_update::cargo_crate_version;
 use serde_derive::{Deserialize, Serialize};
 use serde_json::json;
 use std::{
     env, hint,
     path::Path,
-    process::{self},
+    process,
     sync::{Arc, Mutex},
     thread,
     time::Duration,
@@ -63,21 +62,6 @@ impl ::std::default::Default for AppConfig {
     }
 }
 
-fn update() -> Result<(), Box<dyn (::std::error::Error)>> {
-    let config = self_update::backends::github::Update::configure()
-        .repo_owner("eoeo-org")
-        .repo_name("pcsc-rs")
-        .bin_name("pcsc-rs")
-        .show_download_progress(true)
-        .current_version(cargo_crate_version!())
-        .no_confirm(true)
-        .build()?;
-
-    config.update()?;
-
-    Ok(())
-}
-
 fn main() {
     let rs = Path::new(".env").exists();
     if rs {
@@ -98,8 +82,6 @@ fn main() {
 }
 
 fn start() {
-    let _ = update();
-
     let mut system = System::new_all();
 
     let shared_data = Arc::new(ArcSwap::from_pointee(SystemStatus::get(&mut system)));
