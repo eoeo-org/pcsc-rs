@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.2](https://github.com/eoeo-org/pcsc-rs/compare/v1.2.1...v1.2.2) (2024-10-24)
+
+
+### Reverts
+
+* self updator ([#486](https://github.com/eoeo-org/pcsc-rs/issues/486)) ([1a4250b](https://github.com/eoeo-org/pcsc-rs/commit/1a4250ba6d868aa990c23bd6c078c315f2551a33))
+
 ## [1.2.1](https://github.com/eoeo-org/pcsc-rs/compare/v1.2.0...v1.2.1) (2024-10-23)
 
 
