@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.3.0](https://github.com/eoeo-org/pcsc-rs/compare/v1.2.1...v1.3.0) (2024-11-15)
+
+
+### Features
+
+* re-add self updater ([#494](https://github.com/eoeo-org/pcsc-rs/issues/494)) ([26ce901](https://github.com/eoeo-org/pcsc-rs/commit/26ce901a520d5434c908ca010784efe26b402d66))
+
+
+### Dependencies
+
+* lock file maintenance ([#491](https://github.com/eoeo-org/pcsc-rs/issues/491)) ([2a3f98b](https://github.com/eoeo-org/pcsc-rs/commit/2a3f98bb608ddcb452052f578e5a7cc7680fbf93))
+* lock file maintenance ([#493](https://github.com/eoeo-org/pcsc-rs/issues/493)) ([4e035e6](https://github.com/eoeo-org/pcsc-rs/commit/4e035e6cbdc440613084901d2f60e278792652b3))
+* update rust crate regex to v1.11.1 ([#488](https://github.com/eoeo-org/pcsc-rs/issues/488)) ([c69da6f](https://github.com/eoeo-org/pcsc-rs/commit/c69da6f7e88c523d0344aee21112a5e5be0504ca))
+* update serde monorepo to v1.0.215 ([#492](https://github.com/eoeo-org/pcsc-rs/issues/492)) ([b35b767](https://github.com/eoeo-org/pcsc-rs/commit/b35b7679c1c3fde9e172b4eae5f103065eee6ee4))
+
+
+### Reverts
+
+* self updator ([#486](https://github.com/eoeo-org/pcsc-rs/issues/486)) ([1a4250b](https://github.com/eoeo-org/pcsc-rs/commit/1a4250ba6d868aa990c23bd6c078c315f2551a33))
+
 ## [1.2.1](https://github.com/eoeo-org/pcsc-rs/compare/v1.2.0...v1.2.1) (2024-10-23)
 
 
