@@ -5,7 +5,7 @@
 
 ### Features
 
-* re-add self updator ([#494](https://github.com/eoeo-org/pcsc-rs/issues/494)) ([26ce901](https://github.com/eoeo-org/pcsc-rs/commit/26ce901a520d5434c908ca010784efe26b402d66))
+* re-add self updater ([#494](https://github.com/eoeo-org/pcsc-rs/issues/494)) ([26ce901](https://github.com/eoeo-org/pcsc-rs/commit/26ce901a520d5434c908ca010784efe26b402d66))
 
 
 ### Dependencies
