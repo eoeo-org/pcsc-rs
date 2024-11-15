@@ -58,7 +58,9 @@ After=network-online.target
 
 [Service]
 Environment=PASS=npU7pmkkYfuUdKfqzm2BtDfBPEe4pizrXyPVj8Fby3KaUtehNu3ToDtM8uEdGBr3AS9LRUkZixtZxuKTvsL2e4BVrfzWWG7RqqVThLWsVLHLaJJ8ekeGuHtLBkfZpBtv
+Environment="PCSC_UPDATED=terminate"
 ExecStart=/usr/local/bin/pcsc-rs
+Restart=always
 
 [Install]
 WantedBy=network-online.target
@@ -67,3 +69,15 @@ WantedBy=network-online.target
 sudo systemctl daemon-reload
 sudo systemctl enable --now pcsc-rs
 ```
+
+## その他の設定
+
+- `PCSC_UPDATED`
+
+  更新処理後の動作の設定
+
+  | 値          | 説明                      |
+  | ----------- | ------------------------- |
+  | `none`      | なにもしない (デフォルト) |
+  | `terminate` | 終了する                  |
+  | `restart`   | 再起動する                |
