@@ -27,7 +27,7 @@ use std::{
     thread,
     time::Duration,
 };
-use sysinfo::{Disks, System, IS_SUPPORTED_SYSTEM};
+use sysinfo::{CpuRefreshKind, Disks, MemoryRefreshKind, RefreshKind, System, IS_SUPPORTED_SYSTEM};
 
 use crate::status::SystemStatus;
 
@@ -126,7 +126,11 @@ fn main() {
 fn start() {
     let _ = update();
 
-    let mut system = System::new_all();
+    let mut system = System::new_with_specifics(
+        RefreshKind::new()
+            .with_cpu(CpuRefreshKind::new().with_cpu_usage())
+            .with_memory(MemoryRefreshKind::everything()),
+    );
     let mut disks = Disks::new_with_refreshed_list();
 
     let shared_data = Arc::new(ArcSwap::from_pointee(SystemStatus::get(
@@ -189,7 +193,11 @@ fn start() {
 fn init(socket: RawClient) {
     print!("hi from server");
 
-    let mut sys = System::new_all();
+    let mut sys = System::new_with_specifics(
+        RefreshKind::new()
+            .with_cpu(CpuRefreshKind::new().with_cpu_usage())
+            .with_memory(MemoryRefreshKind::everything()),
+    );
     let mut disks = Disks::new_with_refreshed_list();
 
     let pass = env::var("PASS").unwrap_or_default();
