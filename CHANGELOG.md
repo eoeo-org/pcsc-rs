@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.2](https://github.com/eoeo-org/pcsc-rs/compare/v1.3.1...v1.3.2) (2024-11-16)
+
+
+### Performance Improvements
+
+* get only necessary information ([#499](https://github.com/eoeo-org/pcsc-rs/issues/499)) ([5589fca](https://github.com/eoeo-org/pcsc-rs/commit/5589fcaa55fbac936674eb9d619868412212b854))
+
 ## [1.3.1](https://github.com/eoeo-org/pcsc-rs/compare/v1.3.0...v1.3.1) (2024-11-16)
 
 
