@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/eoeo-org/pcsc-rs/compare/v1.3.0...v1.3.1) (2024-11-16)
+
+
+### Code Refactoring
+
+* improve the process of getting disks information ([#497](https://github.com/eoeo-org/pcsc-rs/issues/497)) ([e86e9e1](https://github.com/eoeo-org/pcsc-rs/commit/e86e9e1cb6a6024924401a9a355d0d2a28ada0e0))
+
 ## [1.3.0](https://github.com/eoeo-org/pcsc-rs/compare/v1.2.1...v1.3.0) (2024-11-15)
 
 
