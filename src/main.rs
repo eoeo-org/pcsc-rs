@@ -27,7 +27,7 @@ use std::{
     thread,
     time::Duration,
 };
-use sysinfo::{System, IS_SUPPORTED_SYSTEM};
+use sysinfo::{Disks, System, IS_SUPPORTED_SYSTEM};
 
 use crate::status::SystemStatus;
 
@@ -127,8 +127,12 @@ fn start() {
     let _ = update();
 
     let mut system = System::new_all();
+    let mut disks = Disks::new_with_refreshed_list();
 
-    let shared_data = Arc::new(ArcSwap::from_pointee(SystemStatus::get(&mut system)));
+    let shared_data = Arc::new(ArcSwap::from_pointee(SystemStatus::get(
+        &mut system,
+        &mut disks,
+    )));
 
     threads::spawn_monitor(Arc::clone(&shared_data));
 
@@ -186,11 +190,10 @@ fn init(socket: RawClient) {
     print!("hi from server");
 
     let mut sys = System::new_all();
-    sys.refresh_all();
+    let mut disks = Disks::new_with_refreshed_list();
 
     let pass = env::var("PASS").unwrap_or_default();
-
-    let status = SystemStatus::get(&mut sys);
+    let status = SystemStatus::get(&mut sys, &mut disks);
     socket
         .emit("hi", json!(status.with_pass(pass)))
         .expect("Failed to emit.");
