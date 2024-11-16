@@ -82,7 +82,7 @@ pub struct StatusDataWithPass {
 const GIT_DESCRIBE: &'static str = env!("GIT_DESCRIBE");
 
 impl SystemStatus {
-    pub fn get(sys: &mut System) -> Self {
+    pub fn get(sys: &mut System, disks: &mut Disks) -> Self {
         let cpu_name = sys.cpus()[0].brand().to_string();
         let os_name = System::name().expect("Failed to get os name");
         let os_version = System::os_version()
@@ -119,9 +119,6 @@ impl SystemStatus {
         };
 
         let uptime = unix_to_date::new(System::uptime());
-
-        let disks = Disks::new_with_refreshed_list();
-
         let storages: Vec<StorageData> = disks
             .iter()
             .map(|disk| StorageData {
