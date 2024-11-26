@@ -39,11 +39,6 @@ impl App {
     pub fn new() -> Self {
         App { finish: false }
     }
-
-    fn on_message(&mut self, payload: Payload, _socket: RawClient) {
-        println!("message: {:#?}", payload);
-        self.finish = true;
-    }
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -146,7 +141,6 @@ fn start() {
     println!("Hello, world! {}", pcsc_uri);
 
     let app = Arc::new(Mutex::new(App::new()));
-    let event_app = app.clone();
 
     ClientBuilder::new(pcsc_uri)
         .namespace("/server")
@@ -172,9 +166,6 @@ fn start() {
             if let Err(e) = socket.emit("sync", json!(status.as_ref())) {
                 dbg!(e);
             }
-        })
-        .on(Event::Message, move |payload, client| {
-            event_app.lock().unwrap().on_message(payload, client)
         })
         .on(Event::Error, |err, _| match err {
             Payload::Text(values) => eprintln!("Error: {}", values[0]),
