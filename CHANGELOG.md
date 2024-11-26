@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.4](https://github.com/eoeo-org/pcsc-rs/compare/v1.3.3...v1.3.4) (2024-11-26)
+
+
+### Dependencies
+
+* lock file maintenance ([#508](https://github.com/eoeo-org/pcsc-rs/issues/508)) ([a265f0e](https://github.com/eoeo-org/pcsc-rs/commit/a265f0e9efa926bda303a12c9d9584f903a4b5fc))
+
+
+### Code Refactoring
+
+* remove unused event handling ([#511](https://github.com/eoeo-org/pcsc-rs/issues/511)) ([f84732b](https://github.com/eoeo-org/pcsc-rs/commit/f84732bee47b8f2d6f50c737dbbac11a3a390173))
+
 ## [1.3.3](https://github.com/eoeo-org/pcsc-rs/compare/v1.3.2...v1.3.3) (2024-11-23)
 
 
