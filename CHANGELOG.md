@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.5](https://github.com/eoeo-org/pcsc-rs/compare/v1.3.4...v1.3.5) (2024-11-27)
+
+
+### Dependencies
+
+* update rust crate sysinfo to v0.32.1 ([#512](https://github.com/eoeo-org/pcsc-rs/issues/512)) ([c40aa2e](https://github.com/eoeo-org/pcsc-rs/commit/c40aa2e6f144d2c29e606dc89deb2c03f8a432b1))
+
 ## [1.3.4](https://github.com/eoeo-org/pcsc-rs/compare/v1.3.3...v1.3.4) (2024-11-26)
 
 
