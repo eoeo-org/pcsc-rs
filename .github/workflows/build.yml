@@ -19,15 +19,9 @@ jobs:
       matrix:
         profile: ${{ github.ref_name == github.event.repository.default_branch && fromJson('["dev", "release"]') || fromJson('["dev"]') }}
         platform:
-          - target: aarch64-unknown-linux-gnu
-            os: ubuntu-22.04
-            command: cross
           - target: aarch64-unknown-linux-musl
             os: ubuntu-22.04
             command: cross
-          - target: x86_64-unknown-linux-gnu
-            os: ubuntu-22.04
-            command: cargo
           - target: x86_64-unknown-linux-musl
             os: ubuntu-22.04
             command: cargo
@@ -38,9 +32,6 @@ jobs:
             os: macos-14
             command: cargo
           - target: x86_64-pc-windows-msvc
-            os: windows-2022
-            command: cargo
-          - target: x86_64-pc-windows-gnu
             os: windows-2022
             command: cargo
     runs-on: ${{ matrix.platform.os }}
