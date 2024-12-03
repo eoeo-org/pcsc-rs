@@ -27,6 +27,9 @@ winres = "=0.1.12"
 [target.'cfg(not(any(target_os = "windows", target_os = "macos", target_os = "ios")))'.dependencies]
 openssl = { version = "=0.10.68", features = ["vendored"] }
 
+[lints.clippy]
+pedantic = "warn"
+
 [profile.release]
 strip = "symbols"
 lto = "fat"
