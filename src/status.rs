@@ -2,9 +2,9 @@ use std::env;
 
 use cfg_if::cfg_if;
 use serde::{Deserialize, Serialize};
-use sysinfo::{Cpu, Disks, System};
+use sysinfo::{Cpu, System};
 
-use crate::{gpu, unix_to_date};
+use crate::{gpu, sysinfo_instance::SysinfoInstance, unix_to_date};
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct CoreData {
@@ -82,8 +82,9 @@ pub struct StatusDataWithPass {
 const GIT_DESCRIBE: &'static str = env!("GIT_DESCRIBE");
 
 impl SystemStatus {
-    pub fn get(sys: &mut System, disks: &mut Disks) -> Self {
-        let cpu_name = sys.cpus()[0].brand().to_string();
+    pub fn get(sys: &SysinfoInstance) -> Self {
+        let SysinfoInstance { system, disks } = sys;
+        let cpu_name = system.cpus()[0].brand().to_string();
         let os_name = System::name().expect("Failed to get os name");
         let os_version = System::os_version()
             .or(System::kernel_version())
@@ -101,7 +102,7 @@ impl SystemStatus {
             }
         };
 
-        let cpus: Vec<CoreData> = sys.cpus().iter().map(Into::into).collect();
+        let cpus: Vec<CoreData> = system.cpus().iter().map(Into::into).collect();
 
         let cpu = CpuData {
             model: cpu_name.clone(),
@@ -109,13 +110,13 @@ impl SystemStatus {
         };
 
         let ram = RamData {
-            free: sys.available_memory(),
-            total: sys.total_memory(),
+            free: system.available_memory(),
+            total: system.total_memory(),
         };
 
         let swap = SwapData {
-            free: sys.free_swap(),
-            total: sys.total_swap(),
+            free: system.free_swap(),
+            total: system.total_swap(),
         };
 
         let uptime = unix_to_date::new(System::uptime());
