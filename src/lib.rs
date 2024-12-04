@@ -9,6 +9,7 @@ fn test_function() {
 
 mod gpu;
 mod status;
+mod sysinfo_instance;
 mod thread_message;
 mod threads;
 mod unix_to_date;
@@ -26,9 +27,8 @@ use std::{
     thread,
     time::Duration,
 };
-use sysinfo::{CpuRefreshKind, Disks, MemoryRefreshKind, RefreshKind, System};
 
-use crate::status::SystemStatus;
+use crate::{status::SystemStatus, sysinfo_instance::SysinfoInstance};
 
 struct App {
     pub finish: bool,
@@ -101,17 +101,9 @@ fn update() -> Result<(), Box<dyn (::std::error::Error)>> {
 pub fn start() {
     let _ = update();
 
-    let mut system = System::new_with_specifics(
-        RefreshKind::new()
-            .with_cpu(CpuRefreshKind::new().with_cpu_usage())
-            .with_memory(MemoryRefreshKind::everything()),
-    );
-    let mut disks = Disks::new_with_refreshed_list();
+    let mut sys = SysinfoInstance::new();
 
-    let shared_data = Arc::new(ArcSwap::from_pointee(SystemStatus::get(
-        &mut system,
-        &mut disks,
-    )));
+    let shared_data = Arc::new(ArcSwap::from_pointee(SystemStatus::get(&mut sys)));
 
     threads::spawn_monitor(Arc::clone(&shared_data));
 
@@ -127,13 +119,13 @@ pub fn start() {
         .reconnect_on_disconnect(true)
         .on(Event::Connect, |_, _| println!("Connected"))
         .on(Event::Close, |_, _| println!("Disconnected"))
-        .on("hi", |payload, socket| {
+        .on("hi", move |payload, socket| {
             match payload {
                 Payload::Text(values) => println!("Received: {}", values[0]),
                 Payload::Binary(bin_data) => println!("Received bytes: {:#?}", bin_data),
                 _ => (),
             };
-            init(socket);
+            init(&mut sys, socket);
         })
         .on("sync", move |payload, socket| {
             match payload {
@@ -161,18 +153,11 @@ pub fn start() {
     }
 }
 
-fn init(socket: RawClient) {
+fn init(sys: &mut SysinfoInstance, socket: RawClient) {
     print!("hi from server");
 
-    let mut sys = System::new_with_specifics(
-        RefreshKind::new()
-            .with_cpu(CpuRefreshKind::new().with_cpu_usage())
-            .with_memory(MemoryRefreshKind::everything()),
-    );
-    let mut disks = Disks::new_with_refreshed_list();
-
     let pass = env::var("PASS").unwrap_or_default();
-    let status = SystemStatus::get(&mut sys, &mut disks);
+    let status = SystemStatus::get(sys);
     socket
         .emit("hi", json!(status.with_pass(pass)))
         .expect("Failed to emit.");
