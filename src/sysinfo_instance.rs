@@ -1,4 +1,4 @@
-use sysinfo::{CpuRefreshKind, Disks, MemoryRefreshKind, RefreshKind, System};
+use sysinfo::{CpuRefreshKind, DiskRefreshKind, Disks, MemoryRefreshKind, RefreshKind, System};
 
 pub struct SysinfoInstance {
     pub system: System,
@@ -8,20 +8,22 @@ pub struct SysinfoInstance {
 impl SysinfoInstance {
     pub fn new() -> SysinfoInstance {
         let system = System::new_with_specifics(
-            RefreshKind::new()
-                .with_cpu(CpuRefreshKind::new().with_cpu_usage())
+            RefreshKind::nothing()
+                .with_cpu(CpuRefreshKind::nothing().with_cpu_usage())
                 .with_memory(MemoryRefreshKind::everything()),
         );
-        let disks = Disks::new_with_refreshed_list();
+        let disks =
+            Disks::new_with_refreshed_list_specifics(DiskRefreshKind::nothing().with_storage());
 
         SysinfoInstance { system, disks }
     }
     pub fn refresh(&mut self) {
         self.system.refresh_specifics(
-            RefreshKind::new()
-                .with_cpu(CpuRefreshKind::new().with_cpu_usage())
+            RefreshKind::nothing()
+                .with_cpu(CpuRefreshKind::nothing().with_cpu_usage())
                 .with_memory(MemoryRefreshKind::everything()),
         );
-        self.disks.refresh_list();
+        self.disks
+            .refresh_specifics(true, DiskRefreshKind::nothing().with_storage());
     }
 }
