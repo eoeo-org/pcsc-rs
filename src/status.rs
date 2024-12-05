@@ -37,7 +37,7 @@ pub struct SwapData {
     pub(crate) total: u64,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Eq, Hash, Debug)]
 pub struct StorageData {
     pub(crate) name: String,
     pub(crate) free: u64,
@@ -120,6 +120,8 @@ impl SystemStatus {
         };
 
         let uptime = unix_to_date::new(System::uptime());
+
+        use itertools::Itertools;
         let storages: Vec<StorageData> = disks
             .iter()
             .map(|disk| StorageData {
@@ -127,6 +129,7 @@ impl SystemStatus {
                 free: disk.available_space(),
                 total: disk.total_space(),
             })
+            .unique()
             .collect();
 
         let gpu = gpu::get_info();
