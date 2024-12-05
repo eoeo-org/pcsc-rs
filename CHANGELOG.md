@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.4.0](https://github.com/eoeo-org/pcsc-rs/compare/v1.3.5...v1.4.0) (2024-12-05)
+
+
+### Features
+
+* ensure StorageData is not duplicated ([#529](https://github.com/eoeo-org/pcsc-rs/issues/529)) ([a68367c](https://github.com/eoeo-org/pcsc-rs/commit/a68367c4da4b57ba5d374867b0318036b9a8441f))
+* exclude storage with a total disk size of zero ([#531](https://github.com/eoeo-org/pcsc-rs/issues/531)) ([40dbab6](https://github.com/eoeo-org/pcsc-rs/commit/40dbab6127d6cfac59ed9ac1b55ee15f96e75a7a))
+
+
+### Dependencies
+
+* lock file maintenance ([#518](https://github.com/eoeo-org/pcsc-rs/issues/518)) ([d521f59](https://github.com/eoeo-org/pcsc-rs/commit/d521f59a4d0eff1ead6937297813f2b812281bf0))
+* lock file maintenance ([#532](https://github.com/eoeo-org/pcsc-rs/issues/532)) ([1c8e3d5](https://github.com/eoeo-org/pcsc-rs/commit/1c8e3d521afae43cd93af3e84f2309e39ea31ee7))
+* pin rust crate itertools to =0.13.0 ([#530](https://github.com/eoeo-org/pcsc-rs/issues/530)) ([565f111](https://github.com/eoeo-org/pcsc-rs/commit/565f111cc98b4a6ad6ce9700490ced9444536e66))
+* update rust crate sysinfo to v0.33.0 ([#526](https://github.com/eoeo-org/pcsc-rs/issues/526)) ([76d00ad](https://github.com/eoeo-org/pcsc-rs/commit/76d00add56fe8a65832e9cd3f981820a6ba947c5))
+* update sysinfo to disable default features and enable ones ([#528](https://github.com/eoeo-org/pcsc-rs/issues/528)) ([0959626](https://github.com/eoeo-org/pcsc-rs/commit/0959626769ca7ae5e96a60098e52664052729cfe))
+
+
+### Code Refactoring
+
+* move to lib.rs ([#522](https://github.com/eoeo-org/pcsc-rs/issues/522)) ([01092fa](https://github.com/eoeo-org/pcsc-rs/commit/01092fa01d9c7596efbfe810edc6f7bb9efb1068))
+* simplify system status management with SysinfoInstance ([#525](https://github.com/eoeo-org/pcsc-rs/issues/525)) ([d23832a](https://github.com/eoeo-org/pcsc-rs/commit/d23832a4903cbe5399d94cd31f41d843c5be37cb))
+
 ## [1.3.5](https://github.com/eoeo-org/pcsc-rs/compare/v1.3.4...v1.3.5) (2024-11-27)
 
 
