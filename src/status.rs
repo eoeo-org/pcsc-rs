@@ -124,6 +124,7 @@ impl SystemStatus {
         use itertools::Itertools;
         let storages: Vec<StorageData> = disks
             .iter()
+            .filter(|disk| disk.total_space() != 0)
             .map(|disk| StorageData {
                 name: disk.name().to_string_lossy().to_string(),
                 free: disk.available_space(),
