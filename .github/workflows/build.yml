@@ -60,7 +60,7 @@ jobs:
         uses: taiki-e/install-action@6aa8b420a527920162babdd71d780f9e5b3b4bc8 # v2.46.1
         with:
           tool: cross
-      - run: ${{ matrix.platform.command }} build --locked ${{ matrix.profile == 'release' && '--release' || '' }} --target ${{ matrix.platform.target }}
+      - run: ${{ matrix.platform.command }} build --locked --bins ${{ matrix.profile == 'release' && '--release' || '' }} --target ${{ matrix.platform.target }}
       - uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
         with:
           name: ${{ matrix.profile }}-${{ matrix.platform.target }}
