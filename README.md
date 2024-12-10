@@ -49,7 +49,7 @@ PASS=npU7pmkkYfuUdKfqzm2BtDfBPEe4pizrXyPVj8Fby3KaUtehNu3ToDtM8uEdGBr3AS9LRUkZixt
 
 必要に応じて `pcsc-rs.exe` のショートカットを `shell:startup` に追加すれば、PC と同時に起動するようになります。
 
-Linuxの場合、`sudo mv pcsc-rs-* /usr/local/bin/pcsc-rs`を実行し、Systemdに登録します。\
+Linuxの場合、`sudo install -D --no-target-directory pcsc-rs-* /usr/local/bin/pcsc-rs`を実行し、Systemdに登録します。\
 `sudo --preserve-env=EDITOR systemctl edit --force --full pcsc-rs.service`
 ```
 [Unit]
