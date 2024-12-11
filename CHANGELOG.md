@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.1](https://github.com/eoeo-org/pcsc-rs/compare/v1.4.0...v1.4.1) (2024-12-11)
+
+
+### Dependencies
+
+* lock file maintenance ([#535](https://github.com/eoeo-org/pcsc-rs/issues/535)) ([3f0da52](https://github.com/eoeo-org/pcsc-rs/commit/3f0da528577519487a591b47ca58a67ec525f266))
+* update serde monorepo to v1.0.216 ([#540](https://github.com/eoeo-org/pcsc-rs/issues/540)) ([f3eb0a5](https://github.com/eoeo-org/pcsc-rs/commit/f3eb0a5419a285e9511161e40517553b5ac42832))
+
 ## [1.4.0](https://github.com/eoeo-org/pcsc-rs/compare/v1.3.5...v1.4.0) (2024-12-05)
 
 
