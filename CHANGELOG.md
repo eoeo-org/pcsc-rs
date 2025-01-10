@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.4.2](https://github.com/eoeo-org/pcsc-rs/compare/v1.4.1...v1.4.2) (2025-01-10)
+
+
+### Dependencies
+
+* lock file maintenance ([#543](https://github.com/eoeo-org/pcsc-rs/issues/543)) ([2e188b6](https://github.com/eoeo-org/pcsc-rs/commit/2e188b6fd25cde533a6e0550a34f59e7baf3a0cc))
+* lock file maintenance ([#550](https://github.com/eoeo-org/pcsc-rs/issues/550)) ([f1b1055](https://github.com/eoeo-org/pcsc-rs/commit/f1b10550463ade78769f7eedfddace198000b056))
+* lock file maintenance ([#556](https://github.com/eoeo-org/pcsc-rs/issues/556)) ([d05f3aa](https://github.com/eoeo-org/pcsc-rs/commit/d05f3aa5517f16a86f5a294bc369dd54a6f85f42))
+* update rust crate itertools to v0.14.0 ([#554](https://github.com/eoeo-org/pcsc-rs/issues/554)) ([39271ba](https://github.com/eoeo-org/pcsc-rs/commit/39271baab6256ad6d626fe1b68c29e4d01ff964a))
+* update rust crate self_update to v0.42.0 ([#555](https://github.com/eoeo-org/pcsc-rs/issues/555)) ([63b3e92](https://github.com/eoeo-org/pcsc-rs/commit/63b3e92c8ac66b1cc8826268e412413b21a026a8))
+* update rust crate serde_json to v1.0.135 ([#548](https://github.com/eoeo-org/pcsc-rs/issues/548)) ([73db11b](https://github.com/eoeo-org/pcsc-rs/commit/73db11bbe375188b7d4aa778352c5abffffb202c))
+* update rust crate sysinfo to v0.33.1 ([#549](https://github.com/eoeo-org/pcsc-rs/issues/549)) ([63d02fc](https://github.com/eoeo-org/pcsc-rs/commit/63d02fcf26965b9b667d7bb0e222ca87701b6d5e))
+* update serde monorepo to v1.0.217 ([#551](https://github.com/eoeo-org/pcsc-rs/issues/551)) ([125488d](https://github.com/eoeo-org/pcsc-rs/commit/125488d9fa4277322576a3c0d2fcc16afa8a31bb))
+
 ## [1.4.1](https://github.com/eoeo-org/pcsc-rs/compare/v1.4.0...v1.4.1) (2024-12-11)
 
 
