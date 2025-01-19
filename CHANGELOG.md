@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.4](https://github.com/eoeo-org/pcsc-rs/compare/v1.4.3...v1.4.4) (2025-01-19)
+
+
+### Dependencies
+
+* update rust crate serde_json to v1.0.136 ([#563](https://github.com/eoeo-org/pcsc-rs/issues/563)) ([9d6ce89](https://github.com/eoeo-org/pcsc-rs/commit/9d6ce897e970e0f77b1f3c937958fcdeb531ca07))
+
 ## [1.4.3](https://github.com/eoeo-org/pcsc-rs/compare/v1.4.2...v1.4.3) (2025-01-18)
 
 
