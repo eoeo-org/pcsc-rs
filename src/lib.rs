@@ -151,11 +151,9 @@ pub async fn start() {
                         match t {
                             PacketData::Sync(_) => {
                                 let status = json!(SystemStatus::get(&sys));
-                                let status_bytes = status
-                                    .as_str()
-                                    .expect("Failed to convert to str from status json.")
-                                    .as_bytes();
-                                if let Err(e) = _ws.write_frame(Frame::text(fastwebsockets::Payload::Borrowed(status_bytes))).await {
+                                let status_bytes = serde_json::to_string(&status).expect("Failed to serialize to json");
+                                // let status_bytes = format!("{:?}", status);
+                                if let Err(e) = _ws.write_frame(Frame::text(fastwebsockets::Payload::Borrowed(status_bytes.as_bytes()))).await {
                                     eprintln!("Failed to send auth packet: {:?}", e)
                                 }
                             },
