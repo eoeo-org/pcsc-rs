@@ -13,19 +13,23 @@ mod sysinfo_instance;
 mod thread_message;
 mod threads;
 mod unix_to_date;
+mod packet;
 
+use anyhow::Result;
 use arc_swap::ArcSwap;
+use axum::{body::Bytes, http::Request};
+use fastwebsockets::{FragmentCollector, Frame, OpCode};
+use http_body_util::Empty;
+use hyper::{header::{AUTHORIZATION, CONNECTION, UPGRADE}, upgrade::Upgraded};
+use hyper_util::rt::TokioIo;
+use packet::PacketData;
 use rust_socketio::{ClientBuilder, Event, Payload, RawClient};
 use self_update::cargo_crate_version;
 use serde_derive::{Deserialize, Serialize};
 use serde_json::json;
+use tokio::net::TcpStream;
 use std::{
-    env, hint,
-    path::PathBuf,
-    process,
-    sync::{Arc, Mutex},
-    thread,
-    time::Duration,
+    env, future::Future, hint, path::PathBuf, process, sync::{Arc, Mutex}, thread, time::Duration
 };
 
 use crate::{status::SystemStatus, sysinfo_instance::SysinfoInstance};
@@ -98,7 +102,77 @@ fn update() -> Result<(), Box<dyn (::std::error::Error)>> {
     Ok(())
 }
 
-pub fn start() {
+struct SpawnExecutor;
+
+impl<Fut> hyper::rt::Executor<Fut> for SpawnExecutor
+where
+    Fut: Future + Send + 'static,
+    Fut::Output: Send + 'static,
+{
+    fn execute(&self, fut: Fut) {
+        tokio::task::spawn(fut);
+    }
+}
+
+async fn connect(pass: String) -> Result<FragmentCollector<TokioIo<Upgraded>>> {
+    let stream = TcpStream::connect("localhost:3000").await?;
+
+    let req = Request::builder()
+        .method("GET")
+        .uri(format!("http://localhost:3000/server"))
+        .header(AUTHORIZATION, pass)
+        .header("Host", "localhost:3000")
+        .header(UPGRADE, "websocket")
+        .header(CONNECTION, "upgrade")
+        .header(
+            "Sec-WebSocket-Key",
+            fastwebsockets::handshake::generate_key(),
+        )
+        .header("Sec-WebSocket-Version", "13")
+        .body(Empty::<Bytes>::new())?;
+
+    let (ws, _) = fastwebsockets::handshake::client(&SpawnExecutor, req, stream).await?;
+    Ok(FragmentCollector::new(ws))
+}
+
+pub async fn start() {
+    let mut _ws = connect(env::var("PASS").unwrap_or_default()).await.expect("Failed to connect websocket!");
+    let sys = SysinfoInstance::new();
+    loop {
+        let _msg = _ws.read_frame().await.expect("Failed to read websocket frame");
+        match _msg.opcode {
+            OpCode::Text | OpCode::Binary=> {
+                let mut payload_data: Vec<u8> = Vec::new();
+                _msg.payload.clone_into(&mut payload_data);
+                let _t = std::str::from_utf8(&payload_data).expect("Failed to convert to utf8 string");
+                println!("Normal text: {}", _t);
+                match serde_json::from_str::<packet::PacketData>(_t) {
+                    Ok(t) => {
+                        match t {
+                            PacketData::Sync(_) => {
+                                let status = json!(SystemStatus::get(&sys));
+                                let status_bytes = status
+                                    .as_str()
+                                    .expect("Failed to convert to str from status json.")
+                                    .as_bytes();
+                                if let Err(e) = _ws.write_frame(Frame::text(fastwebsockets::Payload::Borrowed(status_bytes))).await {
+                                    eprintln!("Failed to send auth packet: {:?}", e)
+                                }
+                            },
+                            _ => {}
+                        }
+                    }
+                    Err(e) => {
+                        eprintln!("invalid json format: {:?}", e)
+                    }
+                }
+            }
+            _ => {}
+        }
+    }
+}
+
+pub fn startb() {
     let _ = update();
 
     let mut sys = SysinfoInstance::new();
