@@ -11,14 +11,18 @@ use anyhow::{Ok, Result};
 use bytes::Bytes;
 use fastwebsockets::{FragmentCollector, Frame, OpCode, Payload};
 use http_body_util::Empty;
-use hyper::{header::{CONNECTION, UPGRADE}, upgrade::Upgraded, Request};
+use hyper::{
+    header::{CONNECTION, UPGRADE},
+    upgrade::Upgraded,
+    Request,
+};
 use hyper_util::rt::TokioIo;
 use pcsc_rs::start;
 use serde_json::json;
 use status::SystemStatus;
+use std::future::Future;
 use sysinfo_instance::SysinfoInstance;
 use tokio::net::TcpStream;
-use std::future::Future;
 
 struct SpawnExecutor;
 

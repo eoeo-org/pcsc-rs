@@ -8,5 +8,5 @@ pub enum PacketData {
     #[serde(rename = "SYNC")]
     Sync(Option<SystemStatus>),
     #[serde(rename = "STATUS")]
-    Status(String)
+    Status(String),
 }
