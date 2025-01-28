@@ -20,9 +20,10 @@ use arc_swap::ArcSwap;
 use axum::{body::Bytes, http::Request};
 use fastwebsockets::{FragmentCollector, Frame, OpCode};
 use http_body_util::Empty;
-use hyper::{header::{AUTHORIZATION, CONNECTION, UPGRADE}, upgrade::Upgraded};
+use hyper::{header::{AUTHORIZATION, CONNECTION, HOST, SEC_WEBSOCKET_KEY, SEC_WEBSOCKET_VERSION, UPGRADE}, upgrade::Upgraded};
 use hyper_util::rt::TokioIo;
 use packet::PacketData;
+use base64::{prelude::BASE64_STANDARD, Engine};
 use rust_socketio::{ClientBuilder, Event, Payload, RawClient};
 use self_update::cargo_crate_version;
 use serde_derive::{Deserialize, Serialize};
@@ -121,14 +122,14 @@ async fn connect(pass: String) -> Result<FragmentCollector<TokioIo<Upgraded>>> {
         .method("GET")
         .uri(format!("http://localhost:3000/server"))
         .header(AUTHORIZATION, pass)
-        .header("Host", "localhost:3000")
+        .header(HOST, "localhost:3000")
         .header(UPGRADE, "websocket")
         .header(CONNECTION, "upgrade")
         .header(
-            "Sec-WebSocket-Key",
+            SEC_WEBSOCKET_KEY,
             fastwebsockets::handshake::generate_key(),
         )
-        .header("Sec-WebSocket-Version", "13")
+        .header(SEC_WEBSOCKET_VERSION, "13")
         .body(Empty::<Bytes>::new())?;
 
     let (ws, _) = fastwebsockets::handshake::client(&SpawnExecutor, req, stream).await?;
@@ -150,7 +151,7 @@ pub async fn start() {
                     Ok(t) => {
                         match t {
                             PacketData::Sync(_) => {
-                                let status = json!(SystemStatus::get(&sys));
+                                let status = json!(PacketData::Sync(Option::Some(SystemStatus::get(&sys))));
                                 let status_bytes = serde_json::to_string(&status).expect("Failed to serialize to json");
                                 // let status_bytes = format!("{:?}", status);
                                 if let Err(e) = _ws.write_frame(Frame::text(fastwebsockets::Payload::Borrowed(status_bytes.as_bytes()))).await {
