@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.9](https://github.com/eoeo-org/pcsc-rs/compare/v1.4.8...v1.4.9) (2025-02-11)
+
+
+### Dependencies
+
+* lock file maintenance ([#586](https://github.com/eoeo-org/pcsc-rs/issues/586)) ([46ac833](https://github.com/eoeo-org/pcsc-rs/commit/46ac833e332ddc6b58925e13afabe985bd8501c1))
+
 ## [1.4.8](https://github.com/eoeo-org/pcsc-rs/compare/v1.4.7...v1.4.8) (2025-02-10)
 
 
