@@ -22,6 +22,11 @@
   "reviewersFromCodeOwners": true,
   "packageRules": [
     {
+      "matchDepTypes": ["build-dependencies"],
+      "labels": ["dependencies", "semver:patch"],
+      "semanticCommitType": "build"
+    },
+    {
       "matchDepTypes": ["dependencies", "require"],
       "labels": ["dependencies", "semver:patch"],
       "semanticCommitType": "deps",
