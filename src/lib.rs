@@ -8,25 +8,40 @@ fn test_function() {
 }
 
 mod gpu;
+mod packet;
 mod status;
 mod sysinfo_instance;
 mod thread_message;
 mod threads;
 mod unix_to_date;
 
+use anyhow::Result;
 use arc_swap::ArcSwap;
+use axum::{body::Bytes, http::Request};
+use base64::{prelude::BASE64_STANDARD, Engine};
+use fastwebsockets::{FragmentCollector, Frame, OpCode};
+use http_body_util::Empty;
+use hyper::{
+    header::{AUTHORIZATION, CONNECTION, HOST, SEC_WEBSOCKET_KEY, SEC_WEBSOCKET_VERSION, UPGRADE},
+    upgrade::Upgraded,
+};
+use hyper_util::rt::TokioIo;
+use packet::PacketData;
 use rust_socketio::{ClientBuilder, Event, Payload, RawClient};
 use self_update::cargo_crate_version;
 use serde_derive::{Deserialize, Serialize};
 use serde_json::json;
 use std::{
-    env, hint,
+    env,
+    future::Future,
+    hint,
     path::PathBuf,
     process,
     sync::{Arc, Mutex},
     thread,
     time::Duration,
 };
+use tokio::net::TcpStream;
 
 use crate::{status::SystemStatus, sysinfo_instance::SysinfoInstance};
 
@@ -98,7 +113,85 @@ fn update() -> Result<(), Box<dyn (::std::error::Error)>> {
     Ok(())
 }
 
-pub fn start() {
+struct SpawnExecutor;
+
+impl<Fut> hyper::rt::Executor<Fut> for SpawnExecutor
+where
+    Fut: Future + Send + 'static,
+    Fut::Output: Send + 'static,
+{
+    fn execute(&self, fut: Fut) {
+        tokio::task::spawn(fut);
+    }
+}
+
+async fn connect(pass: String) -> Result<FragmentCollector<TokioIo<Upgraded>>> {
+    let stream = TcpStream::connect("localhost:3000").await?;
+
+    let req = Request::builder()
+        .method("GET")
+        .uri(format!("http://localhost:3000/server"))
+        .header(AUTHORIZATION, pass)
+        .header(HOST, "localhost:3000")
+        .header(UPGRADE, "websocket")
+        .header(CONNECTION, "upgrade")
+        .header(SEC_WEBSOCKET_KEY, fastwebsockets::handshake::generate_key())
+        .header(SEC_WEBSOCKET_VERSION, "13")
+        .body(Empty::<Bytes>::new())?;
+
+    let (ws, _) = fastwebsockets::handshake::client(&SpawnExecutor, req, stream).await?;
+    Ok(FragmentCollector::new(ws))
+}
+
+pub async fn start() {
+    let mut _ws = connect(env::var("PASS").unwrap_or_default())
+        .await
+        .expect("Failed to connect websocket!");
+    let sys = SysinfoInstance::new();
+    loop {
+        let _msg = _ws
+            .read_frame()
+            .await
+            .expect("Failed to read websocket frame");
+        match _msg.opcode {
+            OpCode::Text | OpCode::Binary => {
+                let mut payload_data: Vec<u8> = Vec::new();
+                _msg.payload.clone_into(&mut payload_data);
+                let _t =
+                    std::str::from_utf8(&payload_data).expect("Failed to convert to utf8 string");
+                println!("Normal text: {}", _t);
+                match serde_json::from_str::<packet::PacketData>(_t) {
+                    Ok(t) => {
+                        match t {
+                            PacketData::Sync(_) => {
+                                let status =
+                                    json!(PacketData::Sync(Option::Some(SystemStatus::get(&sys))));
+                                let status_bytes = serde_json::to_string(&status)
+                                    .expect("Failed to serialize to json");
+                                // let status_bytes = format!("{:?}", status);
+                                if let Err(e) = _ws
+                                    .write_frame(Frame::text(fastwebsockets::Payload::Borrowed(
+                                        status_bytes.as_bytes(),
+                                    )))
+                                    .await
+                                {
+                                    eprintln!("Failed to send auth packet: {:?}", e)
+                                }
+                            }
+                            _ => {}
+                        }
+                    }
+                    Err(e) => {
+                        eprintln!("invalid json format: {:?}", e)
+                    }
+                }
+            }
+            _ => {}
+        }
+    }
+}
+
+pub fn startb() {
     let _ = update();
 
     let mut sys = SysinfoInstance::new();
