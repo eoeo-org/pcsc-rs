@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.4.16](https://github.com/eoeo-org/pcsc-rs/compare/v1.4.15...v1.4.16) (2025-04-04)
+
+
+### Dependencies
+
+* lock file maintenance ([#616](https://github.com/eoeo-org/pcsc-rs/issues/616)) ([aeec7a6](https://github.com/eoeo-org/pcsc-rs/commit/aeec7a6e9ced45923dffff2a07b5d3b47d82c9a7))
+* lock file maintenance ([#620](https://github.com/eoeo-org/pcsc-rs/issues/620)) ([feb6c12](https://github.com/eoeo-org/pcsc-rs/commit/feb6c1253e5ce83f73686b99c09199b01bf4f85a))
+* update rust crate openssl to v0.10.72 ([#623](https://github.com/eoeo-org/pcsc-rs/issues/623)) ([edbb808](https://github.com/eoeo-org/pcsc-rs/commit/edbb808228933a0e6f501bb9a2ff10a5f3de1393))
+
 ## [1.4.15](https://github.com/eoeo-org/pcsc-rs/compare/v1.4.14...v1.4.15) (2025-03-18)
 
 
