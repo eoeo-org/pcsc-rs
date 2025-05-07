@@ -1,6 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "baseBranches": ["main"],
+  "baseBranches": [
+    "main"
+  ],
   "extends": [
     "config:best-practices",
     "config:js-app",
@@ -22,19 +24,35 @@
   "reviewersFromCodeOwners": true,
   "packageRules": [
     {
-      "matchDepTypes": ["build-dependencies"],
-      "labels": ["dependencies", "semver:patch"],
+      "matchDepTypes": [
+        "build-dependencies"
+      ],
+      "labels": [
+        "dependencies",
+        "semver:patch"
+      ],
       "semanticCommitType": "build"
     },
     {
-      "matchDepTypes": ["dependencies", "require"],
-      "labels": ["dependencies", "semver:patch"],
+      "matchDepTypes": [
+        "dependencies",
+        "require"
+      ],
+      "labels": [
+        "dependencies",
+        "semver:patch"
+      ],
       "semanticCommitType": "deps",
       "semanticCommitScope": null
     },
     {
-      "matchUpdateTypes": ["lockFileMaintenance"],
-      "labels": ["dependencies", "semver:patch"],
+      "matchUpdateTypes": [
+        "lockFileMaintenance"
+      ],
+      "labels": [
+        "dependencies",
+        "semver:patch"
+      ],
       "semanticCommitType": "deps",
       "semanticCommitScope": null
     }
@@ -43,7 +61,9 @@
     {
       "customType": "jsonata",
       "fileFormat": "toml",
-      "fileMatch": ["^rust-toolchain\\.toml$"],
+      "managerFilePatterns": [
+        "/^rust-toolchain\\.toml$/"
+      ],
       "matchStrings": [
         "toolchain.{ 'depName': 'rust-lang/rust', 'currentValue': channel }"
       ],
