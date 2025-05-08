@@ -43,7 +43,7 @@
     {
       "customType": "jsonata",
       "fileFormat": "toml",
-      "fileMatch": ["^rust-toolchain\\.toml$"],
+      "managerFilePatterns": ["/^rust-toolchain\\.toml$/"],
       "matchStrings": [
         "toolchain.{ 'depName': 'rust-lang/rust', 'currentValue': channel }"
       ],
