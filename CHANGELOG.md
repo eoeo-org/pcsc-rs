@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.18](https://github.com/eoeo-org/pcsc-rs/compare/v1.4.17...v1.4.18) (2025-05-12)
+
+
+### Dependencies
+
+* lock file maintenance ([#638](https://github.com/eoeo-org/pcsc-rs/issues/638)) ([01d6f46](https://github.com/eoeo-org/pcsc-rs/commit/01d6f46b6e02ec41e140f956d90d998dd17911ab))
+* update rust crate sysinfo to v0.35.1 ([#636](https://github.com/eoeo-org/pcsc-rs/issues/636)) ([7aaf724](https://github.com/eoeo-org/pcsc-rs/commit/7aaf7244c3a8b284fcf4e2a754ef1a455fa6c45d))
+
 ## [1.4.17](https://github.com/eoeo-org/pcsc-rs/compare/v1.4.16...v1.4.17) (2025-05-08)
 
 
