@@ -1016,7 +1016,7 @@ dependencies = [
 
 [[package]]
 name = "pcsc-rs"
-version = "1.4.19"
+version = "1.4.20"
 dependencies = [
  "arc-swap",
  "cfg-if",
