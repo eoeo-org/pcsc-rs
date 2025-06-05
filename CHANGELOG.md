@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.22](https://github.com/eoeo-org/pcsc-rs/compare/v1.4.21...v1.4.22) (2025-06-05)
+
+
+### Dependencies
+
+* update rust crate sysinfo to v0.35.2 ([#648](https://github.com/eoeo-org/pcsc-rs/issues/648)) ([946faff](https://github.com/eoeo-org/pcsc-rs/commit/946faffc59111dca86c69094f669a36d5e363d1e))
+
 ## [1.4.21](https://github.com/eoeo-org/pcsc-rs/compare/v1.4.20...v1.4.21) (2025-06-02)
 
 
