@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.23](https://github.com/eoeo-org/pcsc-rs/compare/v1.4.22...v1.4.23) (2025-06-15)
+
+
+### Dependencies
+
+* update rust crate cfg-if to v1.0.1 ([#651](https://github.com/eoeo-org/pcsc-rs/issues/651)) ([f42ddb7](https://github.com/eoeo-org/pcsc-rs/commit/f42ddb7a23865b87f1eb30b832dcadbdb31d73ca))
+
 ## [1.4.22](https://github.com/eoeo-org/pcsc-rs/compare/v1.4.21...v1.4.22) (2025-06-05)
 
 
